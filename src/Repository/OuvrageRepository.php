@@ -31,4 +31,14 @@ class OuvrageRepository extends ServiceEntityRepository
 
         return false;
     }
+
+    public function getExemplaires(int $id): array
+    {
+        $ouvrage = $this->find($id);
+        if (!$ouvrage) {
+            throw new \InvalidArgumentException('Ouvrage non trouvé');
+        }
+
+        return $ouvrage->getExemplaires()->toArray();
+    }
 }

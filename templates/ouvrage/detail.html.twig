@@ -25,6 +25,9 @@
     <p>ISBN : {{ ouvrage.ISBN }} / ISSN : {{ ouvrage.ISSN }}</p>
     <p>Disponible à l'emprunt : {{ isDisponible ? 'Oui' : 'Non' }}</p>
     <p>{{ ouvrage.Resume }}</p>
-    <button onclick="history.back()" class="btn">Retour à la liste des ouvrages</button>
+    <nav>
+        <button onclick="location.href='{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}'" class="btn">Voir les exemplaires</button>
+        <button onclick="history.back()" class="btn">Retour à la liste des ouvrages</button>
+    </nav>
 </div>
 {% endblock %}

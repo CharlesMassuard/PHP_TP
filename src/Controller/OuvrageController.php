@@ -29,4 +29,18 @@ final class OuvrageController extends AbstractController
             'isDisponible' => $ouvrage_repository->isDisponible($id),
         ]);
     }
+
+    #[Route('/ouvrage/{id}/exemplaires', name: 'app_ouvrage_exemplaires')]
+    public function exemplaires(OuvrageRepository $ouvrage_repository, int $id): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+
+        return $this->render('ouvrage/exemplaires.html.twig', [
+            'ouvrage' => $ouvrage,
+            'exemplaires' => $ouvrage_repository->getExemplaires($id),
+        ]);
+    }
 }
