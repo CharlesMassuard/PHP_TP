@@ -7,6 +7,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use App\Entity\Exemplaires;
 
 #[ORM\Entity(repositoryClass: OuvrageRepository::class)]
 class Ouvrage
@@ -45,6 +48,44 @@ class Ouvrage
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $Resume = null;
+
+    #[ORM\OneToMany(mappedBy: 'Ouvrage', targetEntity: Exemplaires::class, cascade: ['persist'], orphanRemoval: false)]
+    private Collection $Exemplaires;
+
+    public function __construct()
+    {
+        $this->Exemplaires = new ArrayCollection();
+        // ...si tu as déjà un constructeur, ajoute juste l'initialisation...
+    }
+
+    /**
+     * @return Collection<int, Exemplaires>
+     */
+    public function getExemplaires(): Collection
+    {
+        return $this->Exemplaires;
+    }
+
+    public function addExemplaire(Exemplaires $exemplaire): static
+    {
+        if (!$this->Exemplaires->contains($exemplaire)) {
+            $this->Exemplaires->add($exemplaire);
+            $exemplaire->setOuvrage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExemplaire(Exemplaires $exemplaire): static
+    {
+        if ($this->Exemplaires->removeElement($exemplaire)) {
+            if ($exemplaire->getOuvrage() === $this) {
+                $exemplaire->setOuvrage(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function getId(): ?int
     {

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ExemplairesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Ouvrage;
 
 #[ORM\Entity(repositoryClass: ExemplairesRepository::class)]
 class Exemplaires
@@ -24,6 +25,21 @@ class Exemplaires
 
     #[ORM\Column(length: 255)]
     private ?string $Disponibilite = null;
+
+    #[ORM\ManyToOne(targetEntity: Ouvrage::class, inversedBy: 'Exemplaires')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Ouvrage $Ouvrage = null;
+
+    public function getOuvrage(): ?Ouvrage
+    {
+        return $this->Ouvrage;
+    }
+
+    public function setOuvrage(?Ouvrage $ouvrage): static
+    {
+        $this->Ouvrage = $ouvrage;
+        return $this;
+    }
 
     public function getId(): ?int
     {
