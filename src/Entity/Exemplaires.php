@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ExemplairesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 use App\Entity\Ouvrage;
 
 #[ORM\Entity(repositoryClass: ExemplairesRepository::class)]
@@ -23,8 +24,8 @@ class Exemplaires
     #[ORM\Column(length: 255)]
     private ?string $Emplacement = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $Disponibilite = null;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $Disponibilite = null;
 
     #[ORM\ManyToOne(targetEntity: Ouvrage::class, inversedBy: 'Exemplaires')]
     #[ORM\JoinColumn(nullable: false)]
@@ -82,12 +83,12 @@ class Exemplaires
         return $this;
     }
 
-    public function getDisponibilite(): ?string
+    public function getDisponibilite(): ?bool
     {
         return $this->Disponibilite;
     }
 
-    public function setDisponibilite(string $Disponibilite): static
+    public function setDisponibilite(bool $Disponibilite): static
     {
         $this->Disponibilite = $Disponibilite;
 
