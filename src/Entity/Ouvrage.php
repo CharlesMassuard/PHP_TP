@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\OuvrageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: OuvrageRepository::class)]
 class Ouvrage
@@ -167,5 +169,15 @@ class Ouvrage
         $this->Resume = $Resume;
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validateISBNorISSN(ExecutionContextInterface $context): void
+    {
+        if (empty($this->ISBN) && empty($this->ISSN)) {
+            $context->buildViolation('Au moins un des champs ISBN ou ISSN doit être renseigné.')
+                ->atPath('ISBN')
+                ->addViolation();
+        }
     }
 }
