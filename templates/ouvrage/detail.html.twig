@@ -19,7 +19,11 @@
     {% endif %}
     <p>Éditeur : {{ ouvrage.Editeur }}</p>
     <p>Année de parution : {{ ouvrage.Année ? ouvrage.Année|date('Y') : '—' }}</p>
+    <p>Langues : {{ ouvrage.Langues|join(', ') }}</p>
+    <p>Catégories : {{ ouvrage.Categories|join(', ') }}</p>
+    <p>Tags : {{ ouvrage.Tags|join(', ') }}</p>
+    <p>ISBN : {{ ouvrage.ISBN }} / ISSN : {{ ouvrage.ISSN }}</p>
     <p>{{ ouvrage.Resume }}</p>
-    <button onclick="history.back()">Retour à la liste des ouvrages</button>
+    <button onclick="history.back()" class="btn">Retour à la liste des ouvrages</button>
 </div>
 {% endblock %}
