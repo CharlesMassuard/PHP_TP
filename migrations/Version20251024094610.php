@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20251024085027 extends AbstractMigration
+final class Version20251024094610 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,6 +20,7 @@ final class Version20251024085027 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE exemplaires (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, cote VARCHAR(255) NOT NULL, etat VARCHAR(255) NOT NULL, emplacement VARCHAR(255) NOT NULL, disponibilite VARCHAR(255) NOT NULL)');
         $this->addSql('CREATE TABLE ouvrage (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, titre VARCHAR(255) NOT NULL, auteurs CLOB NOT NULL --(DC2Type:json)
         , editeur VARCHAR(255) NOT NULL, isbn VARCHAR(255) DEFAULT NULL, issn VARCHAR(255) DEFAULT NULL, catégories CLOB NOT NULL --(DC2Type:json)
         , tags CLOB NOT NULL --(DC2Type:json)
@@ -38,6 +39,7 @@ final class Version20251024085027 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('DROP TABLE exemplaires');
         $this->addSql('DROP TABLE ouvrage');
         $this->addSql('DROP TABLE messenger_messages');
     }
