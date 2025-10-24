@@ -16,6 +16,22 @@ class OuvrageRepository extends ServiceEntityRepository
         parent::__construct($registry, Ouvrage::class);
     }
 
+    public function isDisponible(int $id): bool
+    {
+        $ouvrage = $this->find($id);
+        if (!$ouvrage) {
+            throw new \InvalidArgumentException('Ouvrage non trouvé');
+        }
+
+        foreach ($ouvrage->getExemplaires() as $exemplaire) {
+            if ($exemplaire->getDisponibilite()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     //    /**
     //     * @return Ouvrage[] Returns an array of Ouvrage objects
     //     */

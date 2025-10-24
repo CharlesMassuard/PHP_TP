@@ -26,6 +26,7 @@ final class OuvrageController extends AbstractController
         }
         return $this->render('ouvrage/detail.html.twig', [
             'ouvrage' => $ouvrage,
+            'isDisponible' => $ouvrage_repository->isDisponible($id),
         ]);
     }
 }

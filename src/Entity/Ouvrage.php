@@ -55,7 +55,6 @@ class Ouvrage
     public function __construct()
     {
         $this->Exemplaires = new ArrayCollection();
-        // ...si tu as déjà un constructeur, ajoute juste l'initialisation...
     }
 
     /**
