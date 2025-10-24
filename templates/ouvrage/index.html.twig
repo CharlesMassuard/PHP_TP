@@ -1,17 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello OuvrageController!{% endblock %}
+{# {% block title %}Hello OuvrageController!{% endblock %} #}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
+<div class="ouvrages">
     {% for ouvrage in ouvrages %}
-        <h1>{{ouvrage.Titre}}</h1>
-        <p>{{ouvrage.Resume}}</p>
+        <div class="ouvrage">
+            <h1>{{ouvrage.Titre}}</h1>
+                {% if ouvrage.Auteurs is not empty %}
+                    <p>
+                        Auteur{% if ouvrage.Auteurs|length > 1 %}s{% endif %} :
+                        {{ ouvrage.Auteurs|join(', ') }}
+                    </p>
+                {% else %}
+                    <p>Auteur inconnu</p>
+                {% endif %}
+            <p>Éditeur : {{ouvrage.Editeur}}</p>
+            <p>Année de parution : {{ ouvrage.Année ? ouvrage.Année|date('Y') : '—' }}</p>
+            <p>{{ouvrage.Resume}}</p>
+        </div>
     {% endfor %}
 </div>
 {% endblock %}
