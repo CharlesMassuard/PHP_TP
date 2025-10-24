@@ -22,7 +22,7 @@ final class Version20251024094610 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE exemplaires (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, cote VARCHAR(255) NOT NULL, etat VARCHAR(255) NOT NULL, emplacement VARCHAR(255) NOT NULL, disponibilite VARCHAR(255) NOT NULL)');
         $this->addSql('CREATE TABLE ouvrage (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, titre VARCHAR(255) NOT NULL, auteurs CLOB NOT NULL --(DC2Type:json)
-        , editeur VARCHAR(255) NOT NULL, isbn VARCHAR(255) DEFAULT NULL, issn VARCHAR(255) DEFAULT NULL, catégories CLOB NOT NULL --(DC2Type:json)
+        , editeur VARCHAR(255) NOT NULL, isbn VARCHAR(255) DEFAULT NULL, issn VARCHAR(255) DEFAULT NULL, Categories CLOB NOT NULL --(DC2Type:json)
         , tags CLOB NOT NULL --(DC2Type:json)
         , langues CLOB NOT NULL --(DC2Type:json)
         , année DATETIME NOT NULL --(DC2Type:datetime_immutable)

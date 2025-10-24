@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{# {% block title %}Hello OuvrageController!{% endblock %} #}
-
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
 {% endblock %}
@@ -9,7 +7,7 @@
 {% block body %}
 <div class="ouvrages">
     {% for ouvrage in ouvrages %}
-        <div class="ouvrage">
+        <div class="ouvrage" title="Voir les détails de '{{ouvrage.Titre}}'" onclick="location.href='{{ path('app_ouvrage_detail', {'id': ouvrage.id}) }}'">
             <h1>{{ouvrage.Titre}}</h1>
                 {% if ouvrage.Auteurs is not empty %}
                     <p>

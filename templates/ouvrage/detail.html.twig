@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ouvrage.Titre }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="ouvrage-detail">
+    <h1>{{ ouvrage.Titre }}</h1>
+    {% if ouvrage.Auteurs is not empty %}
+        <p>
+            Auteur{% if ouvrage.Auteurs|length > 1 %}s{% endif %} :
+            {{ ouvrage.Auteurs|join(', ') }}
+        </p>
+    {% else %}
+        <p>Auteur inconnu</p>
+    {% endif %}
+    <p>Éditeur : {{ ouvrage.Editeur }}</p>
+    <p>Année de parution : {{ ouvrage.Année ? ouvrage.Année|date('Y') : '—' }}</p>
+    <p>{{ ouvrage.Resume }}</p>
+    <button onclick="history.back()">Retour à la liste des ouvrages</button>
+</div>
+{% endblock %}

@@ -42,8 +42,8 @@ class OuvrageFixtures extends Fixture
             $ouvrage->setISBN(mt_rand(0, 4) ? $faker->isbn13() : null);
             $ouvrage->setISSN(mt_rand(0, 6) ? $faker->regexify('[0-9]{4}-[0-9]{3}[0-9X]') : null);
 
-            // catégories / tags / langues (chaque champ stocké en JSON dans l'entité)
-            $ouvrage->setCatégories([$faker->randomElement($categories)]);
+            // Categories / tags / langues (chaque champ stocké en JSON dans l'entité)
+            $ouvrage->setCategories([$faker->randomElement($categories)]);
             $ouvrage->setTags($faker->randomElements($tagsPool, mt_rand(1, 3)));
             $ouvrage->setLangues([$faker->randomElement($langues)]);
 

@@ -16,4 +16,16 @@ final class OuvrageController extends AbstractController
             'ouvrages' => $ouvrage_repository->findAll(),
         ]);
     }
+
+    #[Route('/ouvrage/{id}', name: 'app_ouvrage_detail')]
+    public function detail(OuvrageRepository $ouvrage_repository, int $id): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+        return $this->render('ouvrage/detail.html.twig', [
+            'ouvrage' => $ouvrage,
+        ]);
+    }
 }

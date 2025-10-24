@@ -30,7 +30,7 @@ class Ouvrage
     private ?string $ISSN = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $Catégories = [];
+    private array $Categories = [];
 
     #[ORM\Column(type: Types::JSON)]
     private array $Tags = [];
@@ -109,14 +109,14 @@ class Ouvrage
         return $this;
     }
 
-    public function getCatégories(): array
+    public function getCategories(): array
     {
-        return $this->Catégories;
+        return $this->Categories;
     }
 
-    public function setCatégories(array $Catégories): static
+    public function setCategories(array $Categories): static
     {
-        $this->Catégories = $Catégories;
+        $this->Categories = $Categories;
 
         return $this;
     }
