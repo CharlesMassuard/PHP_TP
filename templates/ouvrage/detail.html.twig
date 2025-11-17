@@ -18,7 +18,7 @@
         <p>Auteur inconnu</p>
     {% endif %}
     <p>Éditeur : {{ ouvrage.Editeur }}</p>
-    <p>Année de parution : {{ ouvrage.Année ? ouvrage.Année|date('Y') : '—' }}</p>
+    <p>Année de parution : {{ ouvrage.Annee ? ouvrage.Annee|date('Y') : '—' }}</p>
     <p>Langues : {{ ouvrage.Langues|join(', ') }}</p>
     <p>Catégories : {{ ouvrage.Categories|join(', ') }}</p>
     <p>Tags : {{ ouvrage.Tags|join(', ') }}</p>

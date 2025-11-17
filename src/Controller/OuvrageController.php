@@ -6,14 +6,34 @@ use App\Repository\OuvrageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Form\OuvrageSearchType;
+use Symfony\Component\HttpFoundation\Request;
 
 final class OuvrageController extends AbstractController
 {
+    #[Route('', name: 'home')]
     #[Route('/ouvrages', name: 'app_ouvrages')]
-    public function index(OuvrageRepository $ouvrage_repository): Response
+    public function index(OuvrageRepository $ouvrage_repository, Request $request): Response
     {
+        $choicesCategories = $ouvrage_repository->findDistinctCategories();
+        $choicesLangues = $ouvrage_repository->findDistinctLangues();
+
+        $form = $this->createForm(OuvrageSearchType::class, null, [
+            'choices_categories' => $choicesCategories,
+            'choices_langues' => $choicesLangues,
+            'method' => 'GET',
+            'csrf_protection' => false,
+        ]);
+        $form->handleRequest($request);
+
+        $data = $form->getData() ?? [];
+        $criteria = array_filter($data, fn($v) => $v !== null && $v !== '' && $v !== []);
+
+        $ouvrages = $criteria ? $ouvrage_repository->search($criteria) : $ouvrage_repository->findAll();
+
         return $this->render('ouvrage/index.html.twig', [
-            'ouvrages' => $ouvrage_repository->findAll(),
+            'ouvrages' => $ouvrages,
+            'searchForm' => $form->createView(),
         ]);
     }
 

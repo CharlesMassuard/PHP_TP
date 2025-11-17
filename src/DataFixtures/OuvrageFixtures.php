@@ -49,7 +49,7 @@ class OuvrageFixtures extends Fixture
 
             // Année : DateTimeImmutable
             $year = (string)mt_rand(1950, (int)date('Y'));
-            $ouvrage->setAnnée(new \DateTimeImmutable($year . '-01-01'));
+            $ouvrage->setAnnee(new \DateTimeImmutable($year . '-01-01'));
 
             $ouvrage->setResume($faker->paragraphs(mt_rand(1, 4), true));
 

@@ -44,7 +44,7 @@ class Ouvrage
     private array $Langues = [];
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $Année = null;
+    private ?\DateTimeImmutable $Annee = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $Resume = null;
@@ -187,14 +187,14 @@ class Ouvrage
         return $this;
     }
 
-    public function getAnnée(): ?\DateTimeImmutable
+    public function getAnnee(): ?\DateTimeImmutable
     {
-        return $this->Année;
+        return $this->Annee;
     }
 
-    public function setAnnée(\DateTimeImmutable $Année): static
+    public function setAnnee(\DateTimeImmutable $Annee): static
     {
-        $this->Année = $Année;
+        $this->Annee = $Annee;
 
         return $this;
     }
