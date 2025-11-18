@@ -34,12 +34,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     public const ROLE_ADMIN = 'ROLE_ADMIN';
-    public const ROLE_LIBRARIAN = 'ROLE_LIBRARIAN'; 
-    public const ROLE_MEMBER = 'ROLE_MEMBER';
+    public const ROLE_LIBRARIAN = 'ROLE_LIBRARIAN';
 
     public function __construct()
     {
-        $this->roles = [self::ROLE_MEMBER];
+        $this->roles = [];
     }
 
     public function getId(): ?int
@@ -75,7 +74,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
