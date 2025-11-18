@@ -15,10 +15,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsCommand(
-    name: 'app:create-admin',
-    description: 'Create an admin user',
+    name: 'app:create-librarian',
+    description: 'Create a librarian user',
 )]
-class CreateAdminCommand extends Command
+class CreateLibrarianCommand extends Command
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
@@ -30,8 +30,8 @@ class CreateAdminCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('email', InputArgument::OPTIONAL, 'Admin email address')
-            ->addArgument('password', InputArgument::OPTIONAL, 'Admin password')
+            ->addArgument('email', InputArgument::OPTIONAL, 'Librarian email address')
+            ->addArgument('password', InputArgument::OPTIONAL, 'Librarian password')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force creation even if user already exists')
         ;
     }
@@ -84,7 +84,7 @@ class CreateAdminCommand extends Command
             $user->setEmail($email);
         }
 
-        $user->setRoles([User::ROLE_ADMIN]);
+        $user->setRoles([User::ROLE_LIBRARIAN]);
 
         // Hasher le mot de passe
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
@@ -97,7 +97,7 @@ class CreateAdminCommand extends Command
         $this->entityManager->flush();
 
         $io->success([
-            sprintf('Admin user "%s" created successfully!', $email)
+            sprintf('Librarian user "%s" created successfully!', $email)
         ]);
 
         return Command::SUCCESS;
