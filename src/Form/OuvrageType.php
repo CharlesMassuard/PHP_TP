@@ -23,34 +23,34 @@ class OuvrageType extends AbstractType
             // { changed code - utilise les méthodes string }
             ->add('auteursAsString', TextType::class, [
                 'label' => 'Auteurs (séparés par des virgules)',
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'data' => $options['data'] ? $options['data']->getAuteursAsString() : '',
             ])
             ->add('Editeur', TextType::class, [
                 'label' => 'Éditeur',
-                'required' => false,
+                'required' => true,
             ])
             ->add('Annee', DateType::class, [
                 'label' => 'Année de parution',
                 'widget' => 'single_text',
-                'required' => false,
+                'required' => true,
             ])
             ->add('languesAsString', TextType::class, [
                 'label' => 'Langues (séparées par des virgules)',
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'data' => $options['data'] ? $options['data']->getLanguesAsString() : '',
             ])
             ->add('categoriesAsString', TextType::class, [
                 'label' => 'Catégories (séparées par des virgules)',
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'data' => $options['data'] ? $options['data']->getCategoriesAsString() : '',
             ])
             ->add('tagsAsString', TextType::class, [
                 'label' => 'Tags (séparés par des virgules)',
-                'required' => false,
+                'required' => true,
                 'mapped' => false,
                 'data' => $options['data'] ? $options['data']->getTagsAsString() : '',
             ])
@@ -64,7 +64,7 @@ class OuvrageType extends AbstractType
             ])
             ->add('Resume', TextareaType::class, [
                 'label' => 'Résumé',
-                'required' => false,
+                'required' => true,
                 'attr' => ['rows' => 5],
             ]);
     }

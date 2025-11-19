@@ -25,7 +25,7 @@
                     Filtrer
                 </button>
                 <a href="{{ path('app_ouvrages') }}" class="btn btn-secondary">Réinitialiser</a>
-                <button onclick="location.href='{{ path('app_ouvrage_edit', {'id': 0}) }}'" class="btn btn-admin">Créer un ouvrage</button>
+                <button onclick="location.href='{{ path('app_ouvrage_new') }}'" class="btn btn-admin">Créer un ouvrage</button>
             </div>
         {{ form_end(searchForm) }}
     {% endif %}
