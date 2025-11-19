@@ -211,6 +211,62 @@ class Ouvrage
         return $this;
     }
 
+    public function getAuteursAsString(): ?string
+    {
+        return $this->Auteurs ? implode(', ', $this->Auteurs) : '';
+    }
+
+    public function setAuteursFromString(?string $auteurs): void
+    {
+        if ($auteurs) {
+            $this->Auteurs = array_map('trim', explode(',', $auteurs));
+        } else {
+            $this->Auteurs = [];
+        }
+    }
+
+    public function getLanguesAsString(): ?string
+    {
+        return $this->Langues ? implode(', ', $this->Langues) : '';
+    }
+
+    public function setLanguesFromString(?string $langues): void
+    {
+        if ($langues) {
+            $this->Langues = array_map('trim', explode(',', $langues));
+        } else {
+            $this->Langues = [];
+        }
+    }
+
+    public function getCategoriesAsString(): ?string
+    {
+        return $this->Categories ? implode(', ', $this->Categories) : '';
+    }
+
+    public function setCategoriesFromString(?string $categories): void
+    {
+        if ($categories) {
+            $this->Categories = array_map('trim', explode(',', $categories));
+        } else {
+            $this->Categories = [];
+        }
+    }
+
+    public function getTagsAsString(): ?string
+    {
+        return $this->Tags ? implode(', ', $this->Tags) : '';
+    }
+
+    public function setTagsFromString(?string $tags): void
+    {
+        if ($tags) {
+            $this->Tags = array_map('trim', explode(',', $tags));
+        } else {
+            $this->Tags = [];
+        }
+    }
+
     #[Assert\Callback]
     public function validateISBNorISSN(ExecutionContextInterface $context): void
     {

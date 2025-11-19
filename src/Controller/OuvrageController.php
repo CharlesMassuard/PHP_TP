@@ -7,7 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\OuvrageSearchType;
+use App\Form\OuvrageType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Doctrine\ORM\EntityManagerInterface;
 
 final class OuvrageController extends AbstractController
 {
@@ -47,6 +50,43 @@ final class OuvrageController extends AbstractController
         return $this->render('ouvrage/detail.html.twig', [
             'ouvrage' => $ouvrage,
             'isDisponible' => $ouvrage_repository->isDisponible($id),
+        ]);
+    }
+
+    #[Route('/ouvrage/{id}/edit', name: 'app_ouvrage_edit')]
+    #[IsGranted('ROLE_LIBRARIAN')]
+    public function edit(OuvrageRepository $ouvrage_repository, Request $request, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+
+        $form = $this->createForm(OuvrageType::class, $ouvrage);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->has('auteursAsString')) {
+                $ouvrage->setAuteursFromString($form->get('auteursAsString')->getData());
+            }
+            if ($form->has('languesAsString')) {
+                $ouvrage->setLanguesFromString($form->get('languesAsString')->getData());
+            }
+            if ($form->has('categoriesAsString')) {
+                $ouvrage->setCategoriesFromString($form->get('categoriesAsString')->getData());
+            }
+            if ($form->has('tagsAsString')) {
+                $ouvrage->setTagsFromString($form->get('tagsAsString')->getData());
+            }
+
+            $entityManager->flush();
+            $this->addFlash('success', 'Ouvrage modifié avec succès !');
+            return $this->redirectToRoute('app_ouvrage_detail', ['id' => $id]);
+        }
+
+        return $this->render('ouvrage/edit.html.twig', [
+            'ouvrage' => $ouvrage,
+            'form' => $form,
         ]);
     }
 

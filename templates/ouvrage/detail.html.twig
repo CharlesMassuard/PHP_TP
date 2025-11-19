@@ -27,7 +27,8 @@
     <p>{{ ouvrage.Resume }}</p>
     <nav>
         <button onclick="location.href='{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}'" class="btn">Voir les exemplaires</button>
-        <button onclick="history.back()" class="btn">Retour à la liste des ouvrages</button>
+        <button onclick="location.href='{{ path('app_ouvrages') }}'" class="btn">Retour à la liste des ouvrages</button>
+        <button onclick="location.href='{{ path('app_ouvrage_edit', {'id': ouvrage.id}) }}'" class="btn">Modifier l'ouvrage</button>
     </nav>
 </div>
 {% endblock %}
