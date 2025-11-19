@@ -3,6 +3,8 @@
     --primary-color: #6366f1;
     --primary-hover: #4f46e5;
     --secondary-color: #64748b;
+    --admin-color: rgb(15, 121, 140);
+    --admin-hover: rgb(19, 119, 136);
     --bg-card: #1e293b;
     --bg-card-hover: #2d3b52;
     --text-primary: #f1f5f9;
@@ -273,6 +275,17 @@ body {
 .btn-secondary:hover {
     background: #475569;
     transform: translateY(-2px);
+}
+
+.btn-admin {
+    background: linear-gradient(135deg, var(--admin-color), rgb(4, 175, 205));
+    color: white;
+}
+
+.btn-admin:hover {
+    background: linear-gradient(135deg, var(--admin-hover), rgb(4, 156, 183));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .btn svg {
