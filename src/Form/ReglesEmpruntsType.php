@@ -6,13 +6,19 @@ use App\Entity\ReglesEmprunts;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ReglesEmpruntsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('categorie')
+            ->add('categorie', ChoiceType::class, [
+                'choices' => $options['choices_categories'] ?? [],
+                'required' => true,
+                'multiple' => false,
+                'label' => 'Catégorie',
+            ])
             ->add('dureeEmpruntJours')
             ->add('nombreMaxEmrpunts')
             ->add('penaliteParJour')
@@ -22,7 +28,7 @@ class ReglesEmpruntsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ReglesEmprunts::class,
+            'choices_categories' => []
         ]);
     }
 }

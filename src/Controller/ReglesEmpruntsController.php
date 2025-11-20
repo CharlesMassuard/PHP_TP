@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReglesEmpruntsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\ReglesEmpruntsType;
+use App\Repository\OuvrageRepository;
 
 final class ReglesEmpruntsController extends AbstractController
 {
@@ -27,10 +28,13 @@ final class ReglesEmpruntsController extends AbstractController
 
     #[Route('/regles/emprunts/new', name: 'new_regle_emprunt')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous devez être admin pour créer une règle d\'emprunt.')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, OuvrageRepository $ouvrage_repository, EntityManagerInterface $entityManager): Response
     {
         $regle = new ReglesEmprunts();
-        $form = $this->createForm(ReglesEmpruntsType::class, $regle);
+        $choicesCategories = $ouvrage_repository->findDistinctCategories();
+        $form = $this->createForm(ReglesEmpruntsType::class, $regle, [
+            'choices_categories' => $choicesCategories,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
