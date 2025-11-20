@@ -15,4 +15,27 @@ class ExemplairesRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Exemplaires::class);
     }
+
+    public function save(Exemplaires $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Exemplaires $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function findExemplaireById(int $id): ?Exemplaires
+    {
+        return $this->find($id);
+    }
 }

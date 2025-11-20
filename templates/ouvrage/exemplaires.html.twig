@@ -24,6 +24,7 @@
                         <td>{{ exemplaire.Cote }}</td>
                         <td>{{ exemplaire.Etat }}</td>
                         <td>{{ exemplaire.Disponibilite ? 'Oui' : 'Non' }}</td>
+                        <td><a href="{{ path('exemplaire_edit', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-admin">Modifier</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -31,5 +32,5 @@
     {% else %}
         <p>Aucun exemplaire disponible pour cet ouvrage.</p>
     {% endif %}
-    <button onclick="history.back()" class="btn">Retour au détail de l'ouvrage</button>
+    <button onclick="window.location.href='{{ path('app_ouvrage_detail', {'id': ouvrage.id}) }}'" class="btn btn-secondary">Retour aux détails de l'ouvrage</button>
 {% endblock %}

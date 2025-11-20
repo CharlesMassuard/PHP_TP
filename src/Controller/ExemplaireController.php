@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\OuvrageRepository;
+use App\Repository\ExemplairesRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Form\ExemplaireType;
+use Doctrine\ORM\EntityManagerInterface;
+
+final class ExemplaireController extends AbstractController
+{
+    #[Route('/ouvrage/{id}/exemplaires', name: 'app_ouvrage_exemplaires')]
+    public function exemplaires(OuvrageRepository $ouvrage_repository, int $id): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+
+        return $this->render('ouvrage/exemplaires.html.twig', [
+            'ouvrage' => $ouvrage,
+            'exemplaires' => $ouvrage_repository->getExemplaires($id),
+        ]);
+    }
+
+    #[Route('/ouvrage/{id}/exemplaires/{exemplaireId}/edit', name: 'exemplaire_edit')]
+    #[IsGranted('ROLE_LIBRARIAN', message: 'Vous devez être bibliothécaire pour modifier un exemplaire.')]
+    public function edit(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, Request $request, int $id, int $exemplaireId, EntityManagerInterface $entityManager): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+
+        $exemplaire = $exemplaires_repository->findExemplaireById($exemplaireId);
+        if (!$exemplaire) {
+            throw $this->createNotFoundException('Exemplaire non trouvé');
+        }
+        $form = $this->createForm(ExemplaireType::class, $exemplaire);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+            $this->addFlash('success', 'Exemplaire modifié avec succès !');
+            return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
+        }
+
+        return $this->render('ouvrage/exemplaire_edit.html.twig', [
+            'ouvrage' => $ouvrage,
+            'exemplaire' => $exemplaire,
+            'form' => $form,
+        ]);
+    }
+}
