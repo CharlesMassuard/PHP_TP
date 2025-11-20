@@ -24,6 +24,7 @@
                         <td>{{ exemplaire.Cote }}</td>
                         <td>{{ exemplaire.Etat }}</td>
                         <td>{{ exemplaire.Disponibilite ? 'Oui' : 'Non' }}</td>
+                        <td><a href="{{ path('exemplaire_reservation', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-primary">Réserver</a></td>
                         <td><a href="{{ path('exemplaire_edit', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-admin">Modifier</a></td>
                     </tr>
                 {% endfor %}

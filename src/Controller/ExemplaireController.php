@@ -22,7 +22,7 @@ final class ExemplaireController extends AbstractController
             throw $this->createNotFoundException('Ouvrage non trouvé');
         }
 
-        return $this->render('ouvrage/exemplaires.html.twig', [
+        return $this->render('exemplaire/exemplaires.html.twig', [
             'ouvrage' => $ouvrage,
             'exemplaires' => $ouvrage_repository->getExemplaires($id),
         ]);
@@ -48,7 +48,7 @@ final class ExemplaireController extends AbstractController
             return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
         }
 
-        return $this->render('ouvrage/exemplaire_edit.html.twig', [
+        return $this->render('exemplaire/exemplaire_edit.html.twig', [
             'ouvrage' => $ouvrage,
             'exemplaire' => $exemplaire,
             'form' => $form,
@@ -76,10 +76,35 @@ final class ExemplaireController extends AbstractController
             return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
         }
 
-        return $this->render('ouvrage/exemplaire_edit.html.twig', [
+        return $this->render('exemplaire/exemplaire_edit.html.twig', [
             'ouvrage' => $ouvrage,
             'exemplaire' => $exemplaire,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/ouvrage/{id}/exemplaires/{exemplaireId}/reserve', name: 'exemplaire_reservation')]
+    #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour réserver un exemplaire.')]
+    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+
+        $exemplaire = $exemplaires_repository->findExemplaireById($exemplaireId);
+        if (!$exemplaire) {
+            throw $this->createNotFoundException('Exemplaire non trouvé');
+        }
+        if (!$exemplaire->getDisponibilite()) {
+            $this->addFlash('error', "Cet exemplaire n'est pas disponible pour le moment.");
+            return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
+        }
+        // Marquer l'exemplaire comme non disponible
+        $exemplaire->setDisponibilite(false);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Exemplaire réservé avec succès !');
+        return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
     }
 }
