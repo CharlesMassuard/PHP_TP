@@ -52,13 +52,16 @@ final class ReglesEmpruntsController extends AbstractController
     
     #[Route('/regles/emprunts/{id}/edit', name: 'edit_regle_emprunt')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous devez être admin pour modifier une règle d\'emprunt.')]
-    public function edit(ReglesEmpruntsRepository $regles_repository, Request $request, int $id, EntityManagerInterface $entityManager): Response
+    public function edit(ReglesEmpruntsRepository $regles_repository, OuvrageRepository $ouvrage_repository, Request $request, int $id, EntityManagerInterface $entityManager): Response
     {
         $regle = $regles_repository->find($id);
         if (!$regle) {
             throw $this->createNotFoundException('Règle d\'emprunt non trouvée');
         }   
-        $form = $this->createForm(ReglesEmpruntsType::class, $regle);
+        $choicesCategories = $ouvrage_repository->findDistinctCategories();
+        $form = $this->createForm(ReglesEmpruntsType::class, $regle, [
+            'choices_categories' => $choicesCategories,
+        ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($regle);
