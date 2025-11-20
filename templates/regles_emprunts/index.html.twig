@@ -36,6 +36,7 @@
     <p>Aucune règle d'emprunt disponible.</p>
 {% endif %}
 
+<button onclick="window.location.href='{{ path('home') }}'" class="btn btn-secondary">Retour</button>
 <button onclick="window.location.href='{{ path('new_regle_emprunt') }}'" class="btn btn-primary">Créer une règle</button>
 
 {% endblock %}
