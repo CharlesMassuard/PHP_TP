@@ -34,5 +34,5 @@
         <p>Aucun exemplaire disponible pour cet ouvrage.</p>
     {% endif %}
     <button onclick="window.location.href='{{ path('app_ouvrage_detail', {'id': ouvrage.id}) }}'" class="btn btn-secondary">Retour aux détails de l'ouvrage</button>
-        <button onclick="window.location.href='{{ path('exemplaire_new', {'id': ouvrage.id}) }}'" class="btn btn-admin">Créer un nouvel exemplaire</button>
+    <button onclick="window.location.href='{{ path('exemplaire_new', {'id': ouvrage.id}) }}'" class="btn btn-admin">Créer un nouvel exemplaire</button>
 {% endblock %}
