@@ -28,6 +28,33 @@ final class ExemplaireController extends AbstractController
         ]);
     }
 
+    #[Route('/ouvrage/{id}/exemplaires/new', name: 'exemplaire_new')]
+    #[IsGranted('ROLE_LIBRARIAN', message: 'Vous devez être bibliothécaire pour créer un exemplaire.')]
+    public function new(OuvrageRepository $ouvrage_repository, Request $request, int $id, EntityManagerInterface $entityManager): Response
+    {
+        $ouvrage = $ouvrage_repository->find($id);
+        if (!$ouvrage) {
+            throw $this->createNotFoundException('Ouvrage non trouvé');
+        }
+        
+        $exemplaire = new \App\Entity\Exemplaires();
+        $form = $this->createForm(ExemplaireType::class, $exemplaire);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $exemplaire->setOuvrage($ouvrage);
+            $entityManager->persist($exemplaire);
+            $entityManager->flush();
+            $this->addFlash('success', 'Exemplaire créé avec succès !');
+            return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
+        }
+
+        return $this->render('ouvrage/exemplaire_edit.html.twig', [
+            'ouvrage' => $ouvrage,
+            'exemplaire' => $exemplaire,
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/ouvrage/{id}/exemplaires/{exemplaireId}/edit', name: 'exemplaire_edit')]
     #[IsGranted('ROLE_LIBRARIAN', message: 'Vous devez être bibliothécaire pour modifier un exemplaire.')]
     public function edit(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, Request $request, int $id, int $exemplaireId, EntityManagerInterface $entityManager): Response

@@ -33,7 +33,7 @@
                     Créer l'exemplaire
                 {% endif %}
             </button>
-            <a href="{% if exemplaire.id %}{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}{% else %}{{ path('app_ouvrages') }}{% endif %}" class="btn btn-secondary">
+            <a href="{% if ouvrage.id %}{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}{% else %}{{ path('app_ouvrages') }}{% endif %}" class="btn btn-secondary">
                 Annuler
             </a>
         </div>
