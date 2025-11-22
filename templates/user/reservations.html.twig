@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réservations{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Mes réservations</h1>
+
+{% if reservations is not empty %}
+    <table>
+        <thead>
+            <tr>
+                <th>Ouvrage</th>
+                <th>Exemplaire</th>
+                <th>Date de retour</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.exemplaire.ouvrage.Titre }}</td>
+                    <td>{{ reservation.exemplaire.Cote }}</td>
+                    <td>{{ reservation.dateRetour|date('d/m/Y') }}</td>
+                    <td>{{ reservation.statut }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Vous n'avez aucune réservation en cours.</p>
+{% endif %}
+{% endblock %}

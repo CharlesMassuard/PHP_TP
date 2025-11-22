@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Form\ExemplaireType;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Emprunt;
 
 final class ExemplaireController extends AbstractController
 {
@@ -102,6 +103,14 @@ final class ExemplaireController extends AbstractController
         }
         // Marquer l'exemplaire comme non disponible
         $exemplaire->setDisponibilite(false);
+        $entityManager->flush();
+
+        $emprunt = new Emprunt();
+        $emprunt->setUser($this->getUser());
+        $emprunt->setExemplaire($exemplaire);
+        $emprunt->setDateRetour(new \DateTimeImmutable('+14 days'));
+        $emprunt->setStatut('Emprunté');
+        $entityManager->persist($emprunt);
         $entityManager->flush();
 
         $this->addFlash('success', 'Exemplaire réservé avec succès !');
