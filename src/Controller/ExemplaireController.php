@@ -12,6 +12,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Form\ExemplaireType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Emprunt;
+use App\Entity\ReglesEmprunts;
 
 final class ExemplaireController extends AbstractController
 {
@@ -97,23 +98,43 @@ final class ExemplaireController extends AbstractController
         if (!$exemplaire) {
             throw $this->createNotFoundException('Exemplaire non trouvé');
         }
-        if (!$exemplaire->getDisponibilite()) {
-            $this->addFlash('error', "Cet exemplaire n'est pas disponible pour le moment.");
-            return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
-        }
+        
         // Marquer l'exemplaire comme non disponible
         $exemplaire->setDisponibilite(false);
         $entityManager->flush();
 
+        $categorieOuvrage = $ouvrage->getCategories()[0] ?? null;
+        $reglesRepository = $entityManager->getRepository(ReglesEmprunts::class);
+        $regle = $reglesRepository->findOneBy(['categorie' => $categorieOuvrage]);
+        if ($regle) {
+            $dureeEmprunt = $regle->getDureeEmpruntJours();
+        } else {
+            $dureeEmprunt = 14;
+        }
+
         $emprunt = new Emprunt();
         $emprunt->setUser($this->getUser());
         $emprunt->setExemplaire($exemplaire);
-        $emprunt->setDateRetour(new \DateTimeImmutable('+14 days'));
-        $emprunt->setStatut('Emprunté');
+        $emprunt->setDateRetour(new \DateTimeImmutable('+' . $dureeEmprunt . ' days'));
+
+        $empruntsActifs = $entityManager->getRepository(Emprunt::class)->findBy([
+            'exemplaire' => $exemplaire,
+            'statut' => ['Emprunté', 'Réservé']
+        ]);
+
+        $msgOk = 'Exemplaire réservé avec succès !';
+
+        if (count($empruntsActifs) > 0) {
+            $emprunt->setStatut('Réservé');
+        } else {
+            $emprunt->setStatut('Emprunté');
+            $msgOk = 'Exemplaire emprunté avec succès !';
+        }
+
         $entityManager->persist($emprunt);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Exemplaire réservé avec succès !');
+        $this->addFlash('success', $msgOk);
         return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
     }
 }
