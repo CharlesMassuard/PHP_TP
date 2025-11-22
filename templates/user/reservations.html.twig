@@ -17,6 +17,7 @@
                 <th>Exemplaire</th>
                 <th>Date de retour</th>
                 <th>Statut</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -26,6 +27,12 @@
                     <td>{{ reservation.exemplaire.Cote }}</td>
                     <td>{{ reservation.dateRetour|date('d/m/Y') }}</td>
                     <td>{{ reservation.statut }}</td>
+                    <td>
+                        <form method="post" action="{{ path('annuler_reservation', {'reservationId': reservation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
+                            <button class="btn btn-danger">Annuler la réservation</button>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
