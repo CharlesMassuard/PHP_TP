@@ -104,4 +104,40 @@ final class EmpruntController extends AbstractController
         $this->addFlash('success', 'Réservation annulée avec succès !');
         return $this->redirectToRoute('app_user_reservations');
     }
+
+    #[Route('/user/reservations/{reservationId}/retourner', name: 'retourner_reservation')]
+    #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour retourner un exemplaire.')]
+    public function returnReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager): Response
+    {   
+        $user = $this->getUser();
+        $reservation = $empruntRepository->find($reservationId);
+        if (!$reservation || $reservation->getUser() !== $user || $reservation->getStatut() !== 'Emprunté') {
+            throw $this->createNotFoundException('Emprunt non trouvé ou accès refusé');
+        }   
+        $reservation->setStatut('Retourné');
+        $entityManager->flush();
+
+        //trouver les emprunts en attente pour le même exemplaire
+        $empruntsEnAttente = $empruntRepository->createQueryBuilder('e')
+            ->where('e.exemplaire = :exemplaire')
+            ->andWhere('e.statut = :statut')
+            ->setParameter('exemplaire', $reservation->getExemplaire())
+            ->setParameter('statut', 'Réservé')
+            ->getQuery()
+            ->getResult();
+
+        //si il y a des emprunts en attente, passer le premier en statut emprunté
+        if (count($empruntsEnAttente) > 0) {
+            $premierEmprunt = $empruntsEnAttente[0];
+            $premierEmprunt->setStatut('Emprunté');
+        } else {
+            //sinon, marquer l'exemplaire comme disponible
+            $exemplaire = $reservation->getExemplaire();
+            $exemplaire->setDisponibilite(true);
+        }
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Exemplaire retourné avec succès !');
+        return $this->redirectToRoute('app_user_reservations');
+    }
 }

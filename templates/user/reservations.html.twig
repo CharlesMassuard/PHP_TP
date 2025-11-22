@@ -28,10 +28,17 @@
                     <td>{{ reservation.dateRetour|date('d/m/Y') }}</td>
                     <td>{{ reservation.statut }}</td>
                     <td>
-                        <form method="post" action="{{ path('annuler_reservation', {'reservationId': reservation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
-                            <button class="btn btn-danger">Annuler la réservation</button>
-                        </form>
+                        {% if reservation.statut == 'Réservé' %}
+                            <form method="post" action="{{ path('annuler_reservation', {'reservationId': reservation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
+                                <button class="btn btn-secondary">Annuler la réservation</button>
+                            </form>
+                        {% elseif reservation.statut == 'Emprunté' %}
+                            <form method="post" action="{{ path('retourner_reservation', {'reservationId': reservation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir retourner cet ouvrage ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
+                                <button class="btn btn-primary">Retourner l'ouvrage</button>
+                            </form>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
