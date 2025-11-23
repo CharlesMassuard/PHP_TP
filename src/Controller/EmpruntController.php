@@ -12,13 +12,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Entity\Emprunt;
 use App\Entity\ReglesEmprunts;
 use App\Repository\EmpruntRepository;
+use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class EmpruntController extends AbstractController
 {
     #[Route('/ouvrage/{id}/exemplaires/{exemplaireId}/reserve', name: 'exemplaire_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour réserver un exemplaire.')]
-    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager): Response
+    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager, AuditLogger $auditLogger): Response
     {
         $ouvrage = $ouvrage_repository->find($id);
         if (!$ouvrage) {
@@ -65,13 +66,20 @@ final class EmpruntController extends AbstractController
         $entityManager->persist($emprunt);
         $entityManager->flush();
 
+        $auditLogger->log('RESERVATION', [
+            'ouvrage_id' => $id,
+            'exemplaire_id' => $exemplaireId,
+            'nouvelle_reservation_id' => $emprunt->getId(),
+            'statut' => $emprunt->getStatut()
+        ]);
+
         $this->addFlash('success', $msgOk);
         return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
     }
 
     #[Route('/user/reservations/{reservationId}/annuler', name: 'annuler_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour réserver un exemplaire.')]
-    public function cancelReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager): Response
+    public function cancelReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager, AuditLogger $auditLogger): Response
     {   
         $user = $this->getUser();
         $reservation = $empruntRepository->find($reservationId);
@@ -102,13 +110,20 @@ final class EmpruntController extends AbstractController
         }
         $entityManager->flush();
 
+        $auditLogger->log('ANNULATION', [
+            'reservation_id' => $reservationId,
+            'exemplaire_id' => $exemplaire->getId(),
+            'ouvrage_id' => $exemplaire->getOuvrage()->getId(),
+            'nouvelle_disponibilite_exemplaire' => $exemplaire->getDisponibilite() ? 'Disponible' : 'Non Disponible'
+        ]);
+
         $this->addFlash('success', 'Réservation annulée avec succès !');
         return $this->redirectToRoute('app_user_reservations');
     }
 
     #[Route('/user/reservations/{reservationId}/retourner', name: 'retourner_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour retourner un exemplaire.')]
-    public function returnReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager): Response
+    public function returnReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager, AuditLogger $auditLogger): Response
     {   
         $user = $this->getUser();
         $reservation = $empruntRepository->find($reservationId);
@@ -138,6 +153,13 @@ final class EmpruntController extends AbstractController
             $exemplaire->setDisponibilite(true);
         }
         $entityManager->flush();
+
+        $auditLogger->log('RETOUR', [
+            'reservation_id' => $reservationId,
+            'exemplaire_id' => $exemplaire->getId(),
+            'ouvrage_id' => $exemplaire->getOuvrage()->getId(),
+            'nouvelle_disponibilite_exemplaire' => $exemplaire->getDisponibilite() ? 'Disponible' : 'Non Disponible'
+        ]);
 
         $this->addFlash('success', 'Exemplaire retourné avec succès !');
         return $this->redirectToRoute('app_user_reservations');
