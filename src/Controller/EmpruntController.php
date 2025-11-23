@@ -87,6 +87,7 @@ final class EmpruntController extends AbstractController
             ->andWhere('e.statut = :statut')
             ->setParameter('exemplaire', $reservation->getExemplaire())
             ->setParameter('statut', 'Réservé')
+            ->orderBy('e.id', 'ASC')
             ->getQuery()
             ->getResult();
 
@@ -123,6 +124,7 @@ final class EmpruntController extends AbstractController
             ->andWhere('e.statut = :statut')
             ->setParameter('exemplaire', $reservation->getExemplaire())
             ->setParameter('statut', 'Réservé')
+            ->orderBy('e.id', 'ASC')
             ->getQuery()
             ->getResult();
 
