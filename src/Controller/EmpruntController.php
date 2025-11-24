@@ -14,12 +14,13 @@ use App\Entity\ReglesEmprunts;
 use App\Repository\EmpruntRepository;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 
 final class EmpruntController extends AbstractController
 {
     #[Route('/ouvrage/{id}/exemplaires/{exemplaireId}/reserve', name: 'exemplaire_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour réserver un exemplaire.')]
-    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager, AuditLogger $auditLogger): Response
+    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager, AuditLogger $auditLogger, EmpruntRepository $empruntRepository): Response
     {
         $ouvrage = $ouvrage_repository->find($id);
         if (!$ouvrage) {
@@ -30,19 +31,30 @@ final class EmpruntController extends AbstractController
         if (!$exemplaire) {
             throw $this->createNotFoundException('Exemplaire non trouvé');
         }
-        
-        // Marquer l'exemplaire comme non disponible
-        $exemplaire->setDisponibilite(false);
-        $entityManager->flush();
 
         $categorieOuvrage = $ouvrage->getCategories()[0] ?? null;
         $reglesRepository = $entityManager->getRepository(ReglesEmprunts::class);
         $regle = $reglesRepository->findOneBy(['categorie' => $categorieOuvrage]);
         if ($regle) {
             $dureeEmprunt = $regle->getDureeEmpruntJours();
+            $nbrMaxEmpruntsParCategorie = $regle->getNombreMaxEmrpunts();
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+            $nbrEmpruntsCatUser = $user->getEmprunts()->filter(function (Emprunt $emprunt) use ($categorieOuvrage) {
+                return $emprunt->getExemplaire()->getOuvrage()->getCategories()[0] === $categorieOuvrage
+                    && in_array($emprunt->getStatut(), ['Emprunté', 'Réservé']);
+            })->count();
+            if ($nbrEmpruntsCatUser >= $nbrMaxEmpruntsParCategorie) {
+                $this->addFlash('error', 'Vous avez atteint le nombre maximum d\'emprunts pour cette catégorie.');
+                return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
+            }
         } else {
             $dureeEmprunt = 14;
         }
+
+        // Marquer l'exemplaire comme non disponible
+        $exemplaire->setDisponibilite(false);
+        $entityManager->flush();
 
         $emprunt = new Emprunt();
         $emprunt->setUser($this->getUser());
