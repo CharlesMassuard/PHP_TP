@@ -40,8 +40,10 @@ L'application contient plusieurs commandes :
     - rappel envoyé si la date de retour est dans **3 jours**
     - rappel envoyé si la date de retour est **aujourd'hui**
     - rappel envoyé si la date de retour était **il y a 7 jours**
-`symfony console app:clear-logs` permet de clear les logs présentes depuis 30 jours ou plus
-`symfony console app:create-librarian` permet de créer un **libraire**
+<br>
+
+`symfony console app:clear-logs` permet de clear les logs présentes depuis 30 jours ou plus <br>
+`symfony console app:create-librarian` permet de créer un **libraire** <br>
 `symfony console app:create-admin` permet de créer un **administrateur**
 
 ## Tests
