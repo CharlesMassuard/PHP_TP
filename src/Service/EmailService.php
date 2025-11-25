@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Service;
+
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Twig\Environment;
+
+class EmailService
+{
+    public function __construct(
+        private MailerInterface $mailer,
+        private Environment $twig
+    ) {}
+
+    public function sendReservationEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/reservation.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Confirmation de réservation')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendEmpruntEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/emprunt.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Confirmation d’emprunt')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendCancellationEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/cancellation.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Annulation de réservation')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendReturnEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/retour.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Confirmation de retour')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendRappelEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/rappel.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Rappel de retour d\'emprunt')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
+}

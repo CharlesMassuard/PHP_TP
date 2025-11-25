@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if exemplaire.id %}
+        Modifier {{ exemplaire.cote }}
+    {% else %}
+        Créer un exemplaire
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="exemplaire-form">
+    <h1>
+        {% if exemplaire.id %}
+            Modifier l'exemplaire
+        {% else %}
+            Créer un nouvel exemplaire
+        {% endif %}
+    </h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if exemplaire.id %}
+                    Enregistrer les modifications
+                {% else %}
+                    Créer l'exemplaire
+                {% endif %}
+            </button>
+            <a href="{% if ouvrage.id %}{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}{% else %}{{ path('app_ouvrages') }}{% endif %}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

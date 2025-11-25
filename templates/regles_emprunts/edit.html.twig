@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if regle.id %}
+        Modifier pour la catégorie {{ regle.categorie }}
+    {% else %}
+        Créer une règle d'emprunt
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="regle-form">
+    <h1>
+        {% if regle.id %}
+            Modifier la règle pour la catégorie {{ regle.categorie }}
+        {% else %}
+            Créer une règle d'emprunt
+        {% endif %}
+    </h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if regle.id %}
+                    Enregistrer les modifications
+                {% else %}
+                    Créer la règle
+                {% endif %}
+            </button>
+            <a href="{{ path('app_regles_emprunts') }}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

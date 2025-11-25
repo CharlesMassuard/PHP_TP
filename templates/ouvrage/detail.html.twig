@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ouvrage.Titre }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="ouvrage-detail">
+    <h1>{{ ouvrage.Titre }}</h1>
+    {% if ouvrage.Auteurs is not empty %}
+        <p>
+            Auteur{% if ouvrage.Auteurs|length > 1 %}s{% endif %} :
+            {{ ouvrage.Auteurs|join(', ') }}
+        </p>
+    {% else %}
+        <p>Auteur inconnu</p>
+    {% endif %}
+    <p>Éditeur : {{ ouvrage.Editeur }}</p>
+    <p>Année de parution : {{ ouvrage.Annee ? ouvrage.Annee|date('Y') : '—' }}</p>
+    <p>Langues : {{ ouvrage.Langues|join(', ') }}</p>
+    <p>Catégories : {{ ouvrage.Categories|join(', ') }}</p>
+    <p>Tags : {{ ouvrage.Tags|join(', ') }}</p>
+    <p>ISBN : {{ ouvrage.ISBN }} / ISSN : {{ ouvrage.ISSN }}</p>
+    <p>Disponible à l'emprunt : {{ isDisponible ? 'Oui' : 'Non' }}</p>
+    <p>{{ ouvrage.Resume }}</p>
+    <nav>
+        <button onclick="location.href='{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}'" class="btn btn-primary">Voir les exemplaires</button>
+        <button onclick="location.href='{{ path('app_ouvrages') }}'" class="btn btn-secondary">Retour à la liste des ouvrages</button>
+        <button onclick="location.href='{{ path('app_ouvrage_edit', {'id': ouvrage.id}) }}'" class="btn btn-admin">Modifier l'ouvrage</button>
+    </nav>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Règles d'emprunt{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Règles d'emprunt</h1>
+
+{% if regles is not empty %}
+    <table>
+        <thead>
+            <tr>
+                <th>Catégorie</th>
+                <th>Durée d'emprunt (jours)</th>
+                <th>Nombre maximum d'emprunts</th>
+                <th>Pénalité par jour (en €)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for regle in regles %}
+                <tr>
+                    <td>{{ regle.categorie }}</td>
+                    <td>{{ regle.dureeEmpruntJours }}</td>
+                    <td>{{ regle.nombreMaxEmrpunts }}</td>
+                    <td>{{ regle.penaliteParJour }}</td>
+                    <td><a href="{{ path('edit_regle_emprunt', {'id': regle.id}) }}" class="btn btn-primary">Modifier</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Aucune règle d'emprunt disponible.</p>
+{% endif %}
+
+<button onclick="window.location.href='{{ path('home') }}'" class="btn btn-secondary">Retour</button>
+<button onclick="window.location.href='{{ path('new_regle_emprunt') }}'" class="btn btn-primary">Créer une règle</button>
+
+{% endblock %}

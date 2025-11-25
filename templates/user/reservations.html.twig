@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes réservations{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<h1>Mes réservations</h1>
+
+{% if reservations is not empty %}
+    <table>
+        <thead>
+            <tr>
+                <th>Ouvrage</th>
+                <th>Exemplaire</th>
+                <th>Date de retour</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.exemplaire.ouvrage.Titre }}</td>
+                    <td>{{ reservation.exemplaire.Cote }}</td>
+                    <td>{{ reservation.dateRetour|date('d/m/Y') }}</td>
+                    <td>{{ reservation.statut }}</td>
+                    <td>
+                        {% if reservation.statut == 'Réservé' %}
+                            <form method="post" action="{{ path('annuler_reservation', {'reservationId': reservation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
+                                <button class="btn btn-secondary">Annuler la réservation</button>
+                            </form>
+                        {% elseif reservation.statut == 'Emprunté' %}
+                            <form method="post" action="{{ path('retourner_reservation', {'reservationId': reservation.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir retourner cet ouvrage ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('annuler' ~ reservation.id) }}">
+                                <button class="btn btn-primary">Retourner l'ouvrage</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Vous n'avez aucune réservation en cours.</p>
+{% endif %}
+{% endblock %}

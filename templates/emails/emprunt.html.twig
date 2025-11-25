@@ -1,0 +1,13 @@
+<h2>Votre emprunt est confirmé</h2>
+
+<p>
+    Bonjour,<br>
+    Vous avez emprunté l’exemplaire n°{{ exemplaire.id }} du livre :
+    <strong>{{ ouvrage.titre }}</strong>.
+</p>
+
+<p>
+    La date de retour prévue est le : <strong>{{ dateRetour|date('d/m/Y') }}</strong>
+</p>
+
+<p>Bonne lecture !</p>

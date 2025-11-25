@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ouvrage.Titre }}{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="exemplaires">
+    <h1>Exemplaires de "{{ ouvrage.Titre }}"</h1>
+    {% if exemplaires is not empty %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Cote</th>
+                    <th>État</th>
+                    <th>Disponible</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exemplaire in exemplaires %}
+                    <tr>
+                        <td>{{ exemplaire.Cote }}</td>
+                        <td>{{ exemplaire.Etat }}</td>
+                        <td>{{ exemplaire.Disponibilite ? 'Oui' : 'Non' }}</td>
+                        <td><a href="{{ path('exemplaire_reservation', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-primary">Réserver</a></td>
+                        <td><a href="{{ path('exemplaire_edit', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-admin">Modifier</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun exemplaire disponible pour cet ouvrage.</p>
+    {% endif %}
+    <button onclick="window.location.href='{{ path('app_ouvrage_detail', {'id': ouvrage.id}) }}'" class="btn btn-secondary">Retour aux détails de l'ouvrage</button>
+    <button onclick="window.location.href='{{ path('exemplaire_new', {'id': ouvrage.id}) }}'" class="btn btn-admin">Créer un nouvel exemplaire</button>
+{% endblock %}

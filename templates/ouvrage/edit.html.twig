@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if ouvrage.id %}
+        Modifier {{ ouvrage.Titre }}
+    {% else %}
+        Créer un ouvrage
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="ouvrage-form">
+    <h1>
+        {% if ouvrage.id %}
+            Modifier l'ouvrage
+        {% else %}
+            Créer un nouvel ouvrage
+        {% endif %}
+    </h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if ouvrage.id %}
+                    Enregistrer les modifications
+                {% else %}
+                    Créer l'ouvrage
+                {% endif %}
+            </button>
+            <a href="{% if ouvrage.id %}{{ path('app_ouvrage_detail', {'id': ouvrage.id}) }}{% else %}{{ path('app_ouvrages') }}{% endif %}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
