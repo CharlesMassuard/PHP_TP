@@ -277,8 +277,10 @@ final class EmpruntController extends AbstractController
     public function adminDashboard(EmpruntRepository $empruntRepository): Response
     {
         $empruntsEnRetard = $empruntRepository->findEmpruntsEnRetard();
+        $pourcentageExemplairesEmpruntes = $empruntRepository->pourcentageExemplairesEmpruntes();
         return $this->render('admin/dashboard.html.twig', [
             'empruntsEnRetard' => $empruntsEnRetard,
+            'pourcentageExemplairesEmpruntes' => $pourcentageExemplairesEmpruntes,
         ]);
     }
 }

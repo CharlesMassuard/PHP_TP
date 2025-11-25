@@ -10,6 +10,8 @@ Dashboard administrateur
 
 {% block body %}
     <h1>Bienvenue sur le tableau de bord administrateur</h1>
+
+    <p>Pourcentage d'exemplaires empruntés : {{ pourcentageExemplairesEmpruntes }}%</p>
     
     <h2>Emprunts en retard</h2>
     {% if empruntsEnRetard is not empty %}

@@ -36,4 +36,29 @@ class EmpruntRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function pourcentageExemplairesEmpruntes(): float
+    {
+        $em = $this->getEntityManager();
+
+        $totalExemplaires = $em->createQueryBuilder()
+            ->select('COUNT(e.id)')
+            ->from('App\Entity\Exemplaires', 'e')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $exemplairesEmpruntes = $em->createQueryBuilder()
+            ->select('COUNT(e.id)')
+            ->from('App\Entity\Emprunt', 'e')
+            ->where('e.statut = :statut')
+            ->setParameter('statut', 'Emprunté')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($totalExemplaires == 0) {
+            return 0.0;
+        }
+
+        return round(($exemplairesEmpruntes / $totalExemplaires) * 100, 2);
+    }
 }
