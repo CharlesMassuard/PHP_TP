@@ -139,6 +139,7 @@ final class EmpruntController extends AbstractController
             ->getResult();
 
         //si il y a des emprunts en attente, passer le premier en statut emprunté
+        $exemplaire = $reservation->getExemplaire();
         if (count($empruntsEnAttente) > 0) {
             $premierEmprunt = $empruntsEnAttente[0];
             $premierEmprunt->setStatut('Emprunté');
@@ -166,7 +167,6 @@ final class EmpruntController extends AbstractController
             );
         } else {
             //sinon, marquer l'exemplaire comme disponible
-            $exemplaire = $reservation->getExemplaire();
             $exemplaire->setDisponibilite(true);
         }
         $entityManager->flush();
@@ -217,6 +217,7 @@ final class EmpruntController extends AbstractController
             ->getResult();
 
         //si il y a des emprunts en attente, passer le premier en statut emprunté
+        $exemplaire = $reservation->getExemplaire();
         if (count($empruntsEnAttente) > 0) {
             $premierEmprunt = $empruntsEnAttente[0];
             $premierEmprunt->setStatut('Emprunté');
@@ -244,7 +245,6 @@ final class EmpruntController extends AbstractController
             );
         } else {
             //sinon, marquer l'exemplaire comme disponible
-            $exemplaire = $reservation->getExemplaire();
             $exemplaire->setDisponibilite(true);
         }
         $entityManager->flush();
