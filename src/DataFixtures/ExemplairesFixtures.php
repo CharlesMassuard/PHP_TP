@@ -1,49 +1,41 @@
 <?php
-
 namespace App\DataFixtures;
 
 use App\Entity\Exemplaires;
 use App\Entity\Ouvrage;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Faker\Factory;
 
-class ExemplairesFixtures extends Fixture
+class ExemplairesFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
 
-        /** @var Ouvrage[] $ouvrages */
         $ouvrages = $manager->getRepository(Ouvrage::class)->findAll();
 
-        $etatChoices = ['Neuf', 'Bon état', 'Usé', 'Endommagé', 'Réparé'];
-        $emplacements = ['Rayon A1', 'Rayon A2', 'Rayon B3', 'Reserve', 'Prêt', 'Lecture sur place'];
-
-        $batchSize = 100;
-        $i = 0;
-
         foreach ($ouvrages as $ouvrage) {
-            // pour chaque ouvrage, créer 1 à 5 exemplaires
-            $count = mt_rand(1, 5);
-            for ($j = 0; $j < $count; $j++) {
-                $ex = new Exemplaires();
-                // Cote : ex. "COTE-1234" ou "A-12-34"
-                $ex->setCote($faker->bothify('COTE-##??'));
-                $ex->setEtat($faker->randomElement($etatChoices));
-                $ex->setEmplacement($faker->randomElement($emplacements));
-                $ex->setDisponibilite((bool) mt_rand(0, 1));
-                $ex->setOuvrage($ouvrage);
+            for ($i = 0; $i < mt_rand(1, 5); $i++) {
+                $exemplaire = new Exemplaires();
+                $exemplaire->setCote($faker->regexify('[A-Z]{1}-[0-9]{3}-[0-9]{3}'));
+                $exemplaire->setEtat($faker->randomElement(['bon', 'moyen', 'mauvais']));
+                $exemplaire->setEmplacement($faker->sentence(3));
+                $exemplaire->setDisponibilite($faker->boolean());
+                $exemplaire->setOuvrage($ouvrage);
 
-                $manager->persist($ex);
-
-                $i++;
-                if ($i % $batchSize === 0) {
-                    $manager->flush();
-                }
+                $manager->persist($exemplaire);
             }
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            OuvrageFixtures::class,
+        ];
     }
 }
