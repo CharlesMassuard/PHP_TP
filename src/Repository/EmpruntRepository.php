@@ -61,4 +61,31 @@ class EmpruntRepository extends ServiceEntityRepository
 
         return round(($exemplairesEmpruntes / $totalExemplaires) * 100, 2);
     }
+
+    public function delaiEmpruntsMoyen(): float
+    {
+        $emprunts = $this->createQueryBuilder('e')
+            ->select('e.dateRetour, e.dateEmprunt')
+            ->where('e.statut = :statut')
+            ->setParameter('statut', 'Retourné')
+            ->getQuery()
+            ->getResult();
+
+        if (empty($emprunts)) {
+            return 0.0;
+        }
+
+        $totalDays = 0;
+        $count = 0;
+
+        foreach ($emprunts as $emprunt) {
+            if ($emprunt['dateRetour'] && $emprunt['dateEmprunt']) {
+                $diff = $emprunt['dateRetour']->diff($emprunt['dateEmprunt']);
+                $totalDays += $diff->days;
+                $count++;
+            }
+        }
+
+        return $count > 0 ? round($totalDays / $count, 2) : 0.0;
+    }
 }

@@ -26,7 +26,13 @@ class Emprunt
     private ?string $statut = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $dateEmprunt = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $dateRetour = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $dateRetourEffectue = null;
 
     public function getId(): ?int
     {
@@ -69,6 +75,18 @@ class Emprunt
         return $this;
     }
 
+    public function getDateEmprunt(): ?\DateTimeImmutable
+    {
+        return $this->dateEmprunt;
+    }
+
+    public function setDateEmprunt(\DateTimeImmutable $dateEmprunt): static
+    {
+        $this->dateEmprunt = $dateEmprunt;
+
+        return $this;
+    }
+
     public function getDateRetour(): ?\DateTimeImmutable
     {
         return $this->dateRetour;
@@ -77,6 +95,18 @@ class Emprunt
     public function setDateRetour(\DateTimeImmutable $dateRetour): static
     {
         $this->dateRetour = $dateRetour;
+
+        return $this;
+    }
+
+    public function getDateRetourEffectue(): ?\DateTime
+    {
+        return $this->dateRetourEffectue;
+    }
+
+    public function setDateRetourEffectue(?\DateTime $dateRetourEffectue): static
+    {
+        $this->dateRetourEffectue = $dateRetourEffectue;
 
         return $this;
     }

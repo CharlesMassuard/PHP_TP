@@ -60,7 +60,9 @@ final class EmpruntController extends AbstractController
         $emprunt = new Emprunt();
         $emprunt->setUser($this->getUser());
         $emprunt->setExemplaire($exemplaire);
+        $emprunt->setDateEmprunt(new \DateTimeImmutable());
         $emprunt->setDateRetour(new \DateTimeImmutable('+' . $dureeEmprunt . ' days'));
+        $emprunt->setDateRetourEffectue(null);
 
         $empruntsActifs = $entityManager->getRepository(Emprunt::class)->findBy([
             'exemplaire' => $exemplaire,
@@ -126,6 +128,7 @@ final class EmpruntController extends AbstractController
             throw $this->createNotFoundException('Réservation non trouvée ou accès refusé');
         }   
         $reservation->setStatut('Annulé');
+        $reservation->setDateRetourEffectue(new \DateTime());
         $entityManager->flush();
 
         //trouver les emprunts en attente pour le même exemplaire
@@ -204,6 +207,7 @@ final class EmpruntController extends AbstractController
             throw $this->createNotFoundException('Emprunt non trouvé ou accès refusé');
         }   
         $reservation->setStatut('Retourné');
+        $reservation->setDateRetourEffectue(new \DateTime());
         $entityManager->flush();
 
         //trouver les emprunts en attente pour le même exemplaire
@@ -278,9 +282,11 @@ final class EmpruntController extends AbstractController
     {
         $empruntsEnRetard = $empruntRepository->findEmpruntsEnRetard();
         $pourcentageExemplairesEmpruntes = $empruntRepository->pourcentageExemplairesEmpruntes();
+        $delaiEmpruntsMoyen = $empruntRepository->delaiEmpruntsMoyen();
         return $this->render('admin/dashboard.html.twig', [
             'empruntsEnRetard' => $empruntsEnRetard,
             'pourcentageExemplairesEmpruntes' => $pourcentageExemplairesEmpruntes,
+            'delaiEmpruntsMoyen' => $delaiEmpruntsMoyen,
         ]);
     }
 }
