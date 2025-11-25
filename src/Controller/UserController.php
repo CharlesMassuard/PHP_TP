@@ -15,6 +15,7 @@ final class UserController extends AbstractController
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour voir vos réservations.')]
     public function reservations(): Response
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         if (!$user) {
             throw $this->createAccessDeniedException('You must be logged in to view reservations.');
