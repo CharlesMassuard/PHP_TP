@@ -1,0 +1,14 @@
+<h2>Votre réservation a bien été enregistrée</h2>
+
+<p>
+    Bonjour,<br>
+    Vous avez réservé l’exemplaire n°{{ exemplaire.id }} de l’ouvrage :
+    <strong>{{ ouvrage.titre }}</strong>.
+</p>
+
+<p>
+    Statut actuel : <strong>{{ statut }}</strong><br>
+    Date de retour prévue : {{ dateRetour|date('d/m/Y') }}
+</p>
+
+<p>Merci d'utiliser notre bibliothèque.</p>

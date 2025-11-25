@@ -15,12 +15,13 @@ use App\Repository\EmpruntRepository;
 use App\Service\AuditLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
+use App\Service\EmailService;
 
 final class EmpruntController extends AbstractController
 {
     #[Route('/ouvrage/{id}/exemplaires/{exemplaireId}/reserve', name: 'exemplaire_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour réserver un exemplaire.')]
-    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager, AuditLogger $auditLogger, EmpruntRepository $empruntRepository): Response
+    public function reserve(OuvrageRepository $ouvrage_repository, ExemplairesRepository $exemplaires_repository, int $id, int $exemplaireId, EntityManagerInterface $entityManager, AuditLogger $auditLogger, EmailService $emailService): Response
     {
         $ouvrage = $ouvrage_repository->find($id);
         if (!$ouvrage) {
@@ -85,7 +86,33 @@ final class EmpruntController extends AbstractController
             'statut' => $emprunt->getStatut()
         ]);
 
-        $this->addFlash('success', $msgOk);
+        $this->addFlash('success', $msgOk);  
+        /** @var User $user */
+        $user = $this->getUser();
+        if ($emprunt->getStatut() === 'Réservé') {
+            $emailService->sendReservationEmail(
+                $user->getEmail(),
+                [
+                    'user' => $this->getUser(),
+                    'ouvrage' => $ouvrage,
+                    'exemplaire' => $exemplaire,
+                    'statut' => $emprunt->getStatut(),
+                    'dateRetour' => $emprunt->getDateRetour()
+                ]
+            );
+        } elseif ($emprunt->getStatut() === 'Emprunté') {
+            $emailService->sendEmpruntEmail(
+                $user->getEmail(),
+                [
+                    'user' => $this->getUser(),
+                    'ouvrage' => $ouvrage,
+                    'exemplaire' => $exemplaire,
+                    'statut' => $emprunt->getStatut(),
+                    'dateRetour' => $emprunt->getDateRetour()
+                ]
+            );
+        }
+
         return $this->redirectToRoute('app_ouvrage_exemplaires', ['id' => $id]);
     }
 
