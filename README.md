@@ -54,7 +54,9 @@ Pour lancer un fichier test en particulier : `php bin/phpunit tests/{nom_du_fich
 
 ## Fixtures
 
-Afin de lancer les fixtures pour peupler la base de données : `php bin/console doctrine:fixtures:load`
+Afin de lancer les fixtures pour peupler la base de données : `php bin/console doctrine:fixtures:load`. <br>
+
+La base de données se trouve dans le dossier `var`.
 
 ## Logs
 
