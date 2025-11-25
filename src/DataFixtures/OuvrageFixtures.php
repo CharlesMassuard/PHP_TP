@@ -28,7 +28,6 @@ class OuvrageFixtures extends Fixture
             $titre = $faker->sentence(mt_rand(2, 6));
             $ouvrage->setTitre($titre);
 
-            // auteurs : 1 à 4 auteurs
             $auteurs = [];
             $countAuteurs = mt_rand(1, 4);
             for ($a = 0; $a < $countAuteurs; $a++) {
@@ -38,16 +37,14 @@ class OuvrageFixtures extends Fixture
 
             $ouvrage->setEditeur($faker->randomElement($editeurs));
 
-            // ISBN parfois null
+            //ISBN parfois null
             $ouvrage->setISBN(mt_rand(0, 4) ? $faker->isbn13() : null);
             $ouvrage->setISSN(mt_rand(0, 6) ? $faker->regexify('[0-9]{4}-[0-9]{3}[0-9X]') : null);
 
-            // Categories / tags / langues (chaque champ stocké en JSON dans l'entité)
             $ouvrage->setCategories([$faker->randomElement($categories)]);
             $ouvrage->setTags($faker->randomElements($tagsPool, mt_rand(1, 3)));
             $ouvrage->setLangues([$faker->randomElement($langues)]);
 
-            // Année : DateTimeImmutable
             $year = (string)mt_rand(1950, (int)date('Y'));
             $ouvrage->setAnnee(new \DateTimeImmutable($year . '-01-01'));
 
@@ -57,11 +54,11 @@ class OuvrageFixtures extends Fixture
 
             if (($i + 1) % $batchSize === 0) {
                 $manager->flush();
-                $manager->clear(); // libère la mémoire
+                $manager->clear(); //ibère la mémoire
             }
         }
 
-        // flush final si nécessaire
+        //flush final
         $manager->flush();
         $manager->clear();
     }
