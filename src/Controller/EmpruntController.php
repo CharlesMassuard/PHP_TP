@@ -118,7 +118,7 @@ final class EmpruntController extends AbstractController
 
     #[Route('/user/reservations/{reservationId}/annuler', name: 'annuler_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour réserver un exemplaire.')]
-    public function cancelReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager, AuditLogger $auditLogger): Response
+    public function cancelReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager, AuditLogger $auditLogger, EmailService $emailService): Response
     {   
         $user = $this->getUser();
         $reservation = $empruntRepository->find($reservationId);
@@ -150,8 +150,20 @@ final class EmpruntController extends AbstractController
             } else {
                 $dureeEmprunt = 14;
             }
+            $dateRetour = new \DateTimeImmutable()->modify('+' . $dureeEmprunt . ' days');
+            $premierEmprunt->setDateRetour($dateRetour);
 
-            $premierEmprunt->setDateRetour((new \DateTimeImmutable())->modify('+' . $dureeEmprunt . ' days'));
+            $nouvelEmprunteur = $premierEmprunt->getUser();
+            $emailService->sendEmpruntEmail(
+                $nouvelEmprunteur->getEmail(),
+                [
+                    'user' => $nouvelEmprunteur,
+                    'ouvrage' => $premierEmprunt->getExemplaire()->getOuvrage(),
+                    'exemplaire' => $premierEmprunt->getExemplaire(),
+                    'statut' => "Emprunté",
+                    'dateRetour' => $dateRetour
+                ]
+            );
         } else {
             //sinon, marquer l'exemplaire comme disponible
             $exemplaire = $reservation->getExemplaire();
@@ -172,7 +184,7 @@ final class EmpruntController extends AbstractController
 
     #[Route('/user/reservations/{reservationId}/retourner', name: 'retourner_reservation')]
     #[IsGranted('ROLE_USER', message: 'Vous devez être connecté pour retourner un exemplaire.')]
-    public function returnReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager, AuditLogger $auditLogger): Response
+    public function returnReservation(int $reservationId, EmpruntRepository $empruntRepository, EntityManagerInterface $entityManager, AuditLogger $auditLogger, EmailService $emailService): Response
     {   
         $user = $this->getUser();
         $reservation = $empruntRepository->find($reservationId);
@@ -204,7 +216,20 @@ final class EmpruntController extends AbstractController
             } else {
                 $dureeEmprunt = 14;
             }
-            $premierEmprunt->setDateRetour((new \DateTimeImmutable())->modify('+' . $dureeEmprunt . ' days'));
+            $dateRetour = new \DateTimeImmutable()->modify('+' . $dureeEmprunt . ' days');
+            $premierEmprunt->setDateRetour($dateRetour);
+
+            $nouvelEmprunteur = $premierEmprunt->getUser();
+            $emailService->sendEmpruntEmail(
+                $nouvelEmprunteur->getEmail(),
+                [
+                    'user' => $nouvelEmprunteur,
+                    'ouvrage' => $premierEmprunt->getExemplaire()->getOuvrage(),
+                    'exemplaire' => $premierEmprunt->getExemplaire(),
+                    'statut' => "Emprunté",
+                    'dateRetour' => $dateRetour
+                ]
+            );
         } else {
             //sinon, marquer l'exemplaire comme disponible
             $exemplaire = $reservation->getExemplaire();
