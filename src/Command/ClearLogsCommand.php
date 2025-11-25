@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 #[AsCommand(
     name: 'app:clear-logs',
-    description: 'Add a short description for your command',
+    description: 'Supprime les logs de plus de 30 jours',
 )]
 class ClearLogsCommand extends Command
 {
