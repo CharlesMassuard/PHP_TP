@@ -54,7 +54,7 @@ class EmailService
 
     public function sendReturnEmail(string $to, array $data): void
     {
-        $html = $this->twig->render('emails/return.html.twig', $data);
+        $html = $this->twig->render('emails/retour.html.twig', $data);
 
         $email = (new Email())
             ->from('ne-pas-repondre@librashelf.fr')
