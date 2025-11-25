@@ -1,0 +1,13 @@
+<h2>Rappel de retour d'emprunt</h2>
+
+<p>
+    Bonjour,<br>
+    Vous avez emprunté l’exemplaire n°{{ exemplaire.id }} du livre :
+    <strong>{{ ouvrage.titre }}</strong>.
+</p>
+
+<p>
+    La date de retour prévue est le : <strong>{{ dateRetour|date('d/m/Y') }}</strong>
+</p>
+
+<p>Merci de bien vouloir retourner l'ouvrage avant cette date afin d'éviter toute pénalité de retard.</p>

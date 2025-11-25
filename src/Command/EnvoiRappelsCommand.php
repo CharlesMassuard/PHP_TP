@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\EmailService;
 
 #[AsCommand(
     name: 'app:envoi-rappels',
@@ -16,7 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 )]
 class EnvoiRappelsCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em, private EmailService $emailService)
     {
         parent::__construct();
     }
@@ -41,6 +42,19 @@ class EnvoiRappelsCommand extends Command
         $emprunts = $this->em->getRepository(\App\Entity\Emprunt::class)->findEmpruntsExpirantDate($dateLimit);
         foreach ($emprunts as $emprunt) {
             $output->writeln(sprintf('+7Jours : Rappel envoyé pour l\'emprunt ID %d, échéance le %s', $emprunt->getId(), $emprunt->getDateRetour()->format('Y-m-d')));
+            $user = $emprunt->getUser();
+            $ouvrage = $emprunt->getExemplaire()->getOuvrage();
+            $exemplaire = $emprunt->getExemplaire();
+            $this->emailService->sendRappelEmail(
+                $user->getEmail(),
+                [
+                    'user' => $user,
+                    'ouvrage' => $ouvrage,
+                    'exemplaire' => $exemplaire,
+                    'statut' => $emprunt->getStatut(),
+                    'dateRetour' => $emprunt->getDateRetour()
+                ]
+            );
         }
     }
 
@@ -50,6 +64,19 @@ class EnvoiRappelsCommand extends Command
         $emprunts = $this->em->getRepository(\App\Entity\Emprunt::class)->findEmpruntsExpirantDate($dateLimit);
         foreach ($emprunts as $emprunt) {
             $output->writeln(sprintf('Aujourd\'hui : Rappel envoyé pour l\'emprunt ID %d, échéance le %s', $emprunt->getId(), $emprunt->getDateRetour()->format('Y-m-d')));
+            $user = $emprunt->getUser();
+            $ouvrage = $emprunt->getExemplaire()->getOuvrage();
+            $exemplaire = $emprunt->getExemplaire();
+            $this->emailService->sendRappelEmail(
+                $user->getEmail(),
+                [
+                    'user' => $user,
+                    'ouvrage' => $ouvrage,
+                    'exemplaire' => $exemplaire,
+                    'statut' => $emprunt->getStatut(),
+                    'dateRetour' => $emprunt->getDateRetour()
+                ]
+            );
         }
     }
 
@@ -59,6 +86,19 @@ class EnvoiRappelsCommand extends Command
         $emprunts = $this->em->getRepository(\App\Entity\Emprunt::class)->findEmpruntsExpirantDate($dateLimit);
         foreach ($emprunts as $emprunt) {
             $output->writeln(sprintf('-3Jours : Rappel envoyé pour l\'emprunt ID %d, échéance le %s', $emprunt->getId(), $emprunt->getDateRetour()->format('Y-m-d')));
+            $user = $emprunt->getUser();
+            $ouvrage = $emprunt->getExemplaire()->getOuvrage();
+            $exemplaire = $emprunt->getExemplaire();
+            $this->emailService->sendRappelEmail(
+                $user->getEmail(),
+                [
+                    'user' => $user,
+                    'ouvrage' => $ouvrage,
+                    'exemplaire' => $exemplaire,
+                    'statut' => $emprunt->getStatut(),
+                    'dateRetour' => $emprunt->getDateRetour()
+                ]
+            );
         }
     }
 }

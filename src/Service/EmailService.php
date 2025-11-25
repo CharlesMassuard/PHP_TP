@@ -64,4 +64,17 @@ class EmailService
 
         $this->mailer->send($email);
     }
+
+    public function sendRappelEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/rappel.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Rappel de retour d\'emprunt')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
 }
