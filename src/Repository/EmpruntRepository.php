@@ -24,4 +24,16 @@ class EmpruntRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findEmpruntsEnRetard(): array
+    {
+        $currentDate = new \DateTimeImmutable('now');
+        $qb = $this->createQueryBuilder('e')
+            ->andWhere('e.dateRetour < :currentDate')
+            ->andWhere('e.statut = :statut')
+            ->setParameter('currentDate', $currentDate->format('Y-m-d'))
+            ->setParameter('statut', 'Emprunté');
+
+        return $qb->getQuery()->getResult();
+    }
 }

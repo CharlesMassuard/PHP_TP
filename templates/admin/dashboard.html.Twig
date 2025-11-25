@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+Dashboard administrateur
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
+{% endblock %}
+
+{% block body %}
+    <h1>Bienvenue sur le tableau de bord administrateur</h1>
+    
+    <h2>Emprunts en retard</h2>
+    {% if empruntsEnRetard is not empty %}
+        <ul>
+            {% for emprunt in empruntsEnRetard %}
+                <li>
+                    Ouvrage: {{ emprunt.exemplaire.ouvrage.titre }} - Emprunteur: {{ emprunt.user.email }} - Date d'échéance: {{ emprunt.dateRetour|date('d/m/Y') }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun emprunt en retard.</p>
+    {% endif %}
+{% endblock %}

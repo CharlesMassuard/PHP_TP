@@ -271,4 +271,14 @@ final class EmpruntController extends AbstractController
         $this->addFlash('success', 'Exemplaire retourné avec succès !');
         return $this->redirectToRoute('app_user_reservations');
     }
+
+    #[Route('/admin/dashboard', name: 'dashboard_admin')]
+    #[IsGranted('ROLE_ADMIN', message: 'Vous devez être admin pour accéder au tableau de bord.')]
+    public function adminDashboard(EmpruntRepository $empruntRepository): Response
+    {
+        $empruntsEnRetard = $empruntRepository->findEmpruntsEnRetard();
+        return $this->render('admin/dashboard.html.twig', [
+            'empruntsEnRetard' => $empruntsEnRetard,
+        ]);
+    }
 }

@@ -28,6 +28,7 @@
                 <a href="{{ path('app_user_reservations') }}" class="btn btn-primary">Voir mes réservations</a>
                 <button onclick="location.href='{{ path('app_ouvrage_new') }}'" class="btn btn-admin">Créer un ouvrage</button>
                 <button onclick="location.href='{{ path('app_regles_emprunts') }}'" class="btn btn-admin">Paramètres des emprunts</button>
+                <button onclick="location.href='{{ path('dashboard_admin') }}'" class="btn btn-admin">Tableau de bord</button>
             </div>
         {{ form_end(searchForm) }}
     {% endif %}
