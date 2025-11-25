@@ -36,10 +36,10 @@ Pour utiliser les mails en local *(si une erreur Mail Server not found apparait)
 
 L'application contient plusieurs commandes :
 
-`symfony console app:envoi-rappels` permet d'envoyer des rappels par *mail* aux membres ayant un emprunt en cours :
-    - rappel envoyé si la date de retour est dans **3 jours**
-    - rappel envoyé si la date de retour est **aujourd'hui**
-    - rappel envoyé si la date de retour était **il y a 7 jours**
+`symfony console app:envoi-rappels` permet d'envoyer des rappels par *mail* aux membres ayant un emprunt en cours :<br>
+    - rappel envoyé si la date de retour est dans **3 jours**<br>
+    - rappel envoyé si la date de retour est **aujourd'hui**<br>
+    - rappel envoyé si la date de retour était **il y a 7 jours**<br>
 <br>
 
 `symfony console app:clear-logs` permet de clear les logs présentes depuis 30 jours ou plus <br>
