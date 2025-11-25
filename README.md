@@ -62,3 +62,10 @@ La base de données se trouve dans le dossier `var`.
 
 Les logs sont ajoutés à la base de données, dans la table **audit_log**.
 
+## Base de données
+
+Sur la base de données présente sur le GIT, il y a un libraire et un admin.
+
+Libraire : **librarian@librashelf.fr** / mdp: **librarian**
+Administrateur : **admin@librashelf.fr** / mdp: **adminadmin**
+
