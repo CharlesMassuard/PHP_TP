@@ -178,6 +178,18 @@ final class EmpruntController extends AbstractController
             'nouvelle_disponibilite_exemplaire' => $exemplaire->getDisponibilite() ? 'Disponible' : 'Non Disponible'
         ]);
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $emailService->sendCancellationEmail(
+            $user->getEmail(),
+            [
+                'user' => $this->getUser(),
+                'ouvrage' => $reservation->getExemplaire()->getOuvrage(),
+                'exemplaire' => $reservation->getExemplaire(),
+                'statut' => $reservation->getStatut()
+            ]
+        );
+
         $this->addFlash('success', 'Réservation annulée avec succès !');
         return $this->redirectToRoute('app_user_reservations');
     }
@@ -243,6 +255,18 @@ final class EmpruntController extends AbstractController
             'ouvrage_id' => $exemplaire->getOuvrage()->getId(),
             'nouvelle_disponibilite_exemplaire' => $exemplaire->getDisponibilite() ? 'Disponible' : 'Non Disponible'
         ]);
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $emailService->sendReturnEmail(
+            $user->getEmail(),
+            [
+                'user' => $this->getUser(),
+                'ouvrage' => $reservation->getExemplaire()->getOuvrage(),
+                'exemplaire' => $reservation->getExemplaire(),
+                'statut' => $reservation->getStatut()
+            ]
+        );
 
         $this->addFlash('success', 'Exemplaire retourné avec succès !');
         return $this->redirectToRoute('app_user_reservations');

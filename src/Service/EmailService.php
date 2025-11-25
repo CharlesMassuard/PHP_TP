@@ -38,4 +38,30 @@ class EmailService
 
         $this->mailer->send($email);
     }
+
+    public function sendCancellationEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/cancellation.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Annulation de réservation')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
+
+    public function sendReturnEmail(string $to, array $data): void
+    {
+        $html = $this->twig->render('emails/return.html.twig', $data);
+
+        $email = (new Email())
+            ->from('ne-pas-repondre@librashelf.fr')
+            ->to($to)
+            ->subject('Confirmation de retour')
+            ->html($html);
+
+        $this->mailer->send($email);
+    }
 }
