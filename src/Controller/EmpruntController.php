@@ -115,6 +115,16 @@ final class EmpruntController extends AbstractController
         if (count($empruntsEnAttente) > 0) {
             $premierEmprunt = $empruntsEnAttente[0];
             $premierEmprunt->setStatut('Emprunté');
+            $categorieOuvrage = $premierEmprunt->getExemplaire()->getOuvrage()->getCategories()[0] ?? null;
+            $reglesRepository = $entityManager->getRepository(ReglesEmprunts::class);
+            $regle = $reglesRepository->findOneBy(['categorie' => $categorieOuvrage]);
+            if ($regle) {
+                $dureeEmprunt = $regle->getDureeEmpruntJours();
+            } else {
+                $dureeEmprunt = 14;
+            }
+
+            $premierEmprunt->setDateRetour((new \DateTimeImmutable())->modify('+' . $dureeEmprunt . ' days'));
         } else {
             //sinon, marquer l'exemplaire comme disponible
             $exemplaire = $reservation->getExemplaire();
@@ -159,6 +169,15 @@ final class EmpruntController extends AbstractController
         if (count($empruntsEnAttente) > 0) {
             $premierEmprunt = $empruntsEnAttente[0];
             $premierEmprunt->setStatut('Emprunté');
+             $categorieOuvrage = $premierEmprunt->getExemplaire()->getOuvrage()->getCategories()[0] ?? null;
+            $reglesRepository = $entityManager->getRepository(ReglesEmprunts::class);
+            $regle = $reglesRepository->findOneBy(['categorie' => $categorieOuvrage]);
+            if ($regle) {
+                $dureeEmprunt = $regle->getDureeEmpruntJours();
+            } else {
+                $dureeEmprunt = 14;
+            }
+            $premierEmprunt->setDateRetour((new \DateTimeImmutable())->modify('+' . $dureeEmprunt . ' days'));
         } else {
             //sinon, marquer l'exemplaire comme disponible
             $exemplaire = $reservation->getExemplaire();
