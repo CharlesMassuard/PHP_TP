@@ -46,13 +46,13 @@ class OuvrageRepository extends ServiceEntityRepository
     {
         // récupère toutes les catégories (colonne JSON) et aplatit
         $rows = $this->createQueryBuilder('o')
-            ->select('o.Categories')
+            ->select('o.categories')
             ->getQuery()
             ->getArrayResult();
 
         $set = [];
         foreach ($rows as $r) {
-            $val = $r['Categories'] ?? $r['Categories'] ?? null;
+            $val = $r['categories'] ?? $r['categories'] ?? null;
             if (!$val) continue;
             $arr = is_array($val) ? $val : json_decode($val, true);
             if (!is_array($arr)) continue;
@@ -65,13 +65,13 @@ class OuvrageRepository extends ServiceEntityRepository
     public function findDistinctLangues(): array
     {
         $rows = $this->createQueryBuilder('o')
-            ->select('o.Langues')
+            ->select('o.langues')
             ->getQuery()
             ->getArrayResult();
 
         $set = [];
         foreach ($rows as $r) {
-            $val = $r['Langues'] ?? null;
+            $val = $r['langues'] ?? null;
             if (!$val) continue;
             $arr = is_array($val) ? $val : json_decode($val, true);
             if (!is_array($arr)) continue;
@@ -94,7 +94,7 @@ class OuvrageRepository extends ServiceEntityRepository
             $or = $qb->expr()->orX();
             foreach ($criteria['categories'] as $i => $cat) {
                 $p = 'cat' . $i;
-                $or->add($qb->expr()->like('LOWER(o.Categories)', ':' . $p));
+                $or->add($qb->expr()->like('LOWER(o.categories)', ':' . $p));
                 $qb->setParameter($p, '%' . mb_strtolower($cat) . '%');
             }
             $qb->andWhere($or);
@@ -104,7 +104,7 @@ class OuvrageRepository extends ServiceEntityRepository
             $or = $qb->expr()->orX();
             foreach ($criteria['langues'] as $i => $lang) {
                 $p = 'lang' . $i;
-                $or->add($qb->expr()->like('LOWER(o.Langues)', ':' . $p));
+                $or->add($qb->expr()->like('LOWER(o.langues)', ':' . $p));
                 $qb->setParameter($p, '%' . mb_strtolower($lang) . '%');
             }
             $qb->andWhere($or);
@@ -112,25 +112,25 @@ class OuvrageRepository extends ServiceEntityRepository
 
         if (!empty($criteria['year_from'])) {
             $from = new \DateTimeImmutable((int)$criteria['year_from'] . '-01-01');
-            $qb->andWhere('o.Annee >= :from')->setParameter('from', $from);
+            $qb->andWhere('o.annee >= :from')->setParameter('from', $from);
         }
         if (!empty($criteria['year_to'])) {
             $to = new \DateTimeImmutable((int)$criteria['year_to'] . '-12-31');
-            $qb->andWhere('o.Annee <= :to')->setParameter('to', $to);
+            $qb->andWhere('o.annee <= :to')->setParameter('to', $to);
         }
 
         if (!empty($criteria['disponible'])) {
             if ($criteria['disponible'] === 'yes') {
-                $qb->innerJoin('o.Exemplaires', 'e')->andWhere('e.Disponibilite = true');
+                $qb->innerJoin('o.exemplaires', 'e')->andWhere('e.disponibilite = true');
             } elseif ($criteria['disponible'] === 'no') {
                 // exemples simplifiés — adapte selon ton mapping
-                $qb->leftJoin('o.Exemplaires', 'e')
-                   ->andWhere($qb->expr()->orX($qb->expr()->isNull('e.id'), $qb->expr()->eq('e.Disponibilite', ':false')))
+                $qb->leftJoin('o.exemplaires', 'e')
+                   ->andWhere($qb->expr()->orX($qb->expr()->isNull('e.id'), $qb->expr()->eq('e.disponibilite', ':false')))
                    ->setParameter('false', false);
             }
         }
 
-        $qb->orderBy('o.Titre', 'ASC');
+        $qb->orderBy('o.titre', 'ASC');
 
         return $qb->getQuery()->getResult();
     }
