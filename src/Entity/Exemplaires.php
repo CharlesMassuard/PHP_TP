@@ -18,20 +18,20 @@ class Exemplaires
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Cote = null;
+    private ?string $cote = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Etat = null;
+    private ?string $etat = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Emplacement = null;
+    private ?string $emplacement = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
-    private ?bool $Disponibilite = null;
+    private ?bool $disponibilite = null;
 
     #[ORM\ManyToOne(targetEntity: Ouvrage::class, inversedBy: 'Exemplaires')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Ouvrage $Ouvrage = null;
+    private ?Ouvrage $ouvrage = null;
 
     /**
      * @var Collection<int, Emprunt>
@@ -46,12 +46,12 @@ class Exemplaires
 
     public function getOuvrage(): ?Ouvrage
     {
-        return $this->Ouvrage;
+        return $this->ouvrage;
     }
 
     public function setOuvrage(?Ouvrage $ouvrage): static
     {
-        $this->Ouvrage = $ouvrage;
+        $this->ouvrage = $ouvrage;
         return $this;
     }
 
@@ -62,48 +62,48 @@ class Exemplaires
 
     public function getCote(): ?string
     {
-        return $this->Cote;
+        return $this->cote;
     }
 
-    public function setCote(string $Cote): static
+    public function setCote(string $cote): static
     {
-        $this->Cote = $Cote;
+        $this->cote = $cote;
 
         return $this;
     }
 
     public function getEtat(): ?string
     {
-        return $this->Etat;
+        return $this->etat;
     }
 
-    public function setEtat(string $Etat): static
+    public function setEtat(string $etat): static
     {
-        $this->Etat = $Etat;
+        $this->etat = $etat;
 
         return $this;
     }
 
     public function getEmplacement(): ?string
     {
-        return $this->Emplacement;
+        return $this->emplacement;
     }
 
-    public function setEmplacement(string $Emplacement): static
+    public function setEmplacement(string $emplacement): static
     {
-        $this->Emplacement = $Emplacement;
+        $this->emplacement = $emplacement;
 
         return $this;
     }
 
     public function getDisponibilite(): ?bool
     {
-        return $this->Disponibilite;
+        return $this->disponibilite;
     }
 
-    public function setDisponibilite(bool $Disponibilite): static
+    public function setDisponibilite(bool $disponibilite): static
     {
-        $this->Disponibilite = $Disponibilite;
+        $this->disponibilite = $disponibilite;
 
         return $this;
     }

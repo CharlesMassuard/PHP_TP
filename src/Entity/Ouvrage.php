@@ -20,41 +20,41 @@ class Ouvrage
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Titre = null;
+    private ?string $titre = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $Auteurs = [];
+    private array $auteurs = [];
 
     #[ORM\Column(length: 255)]
-    private ?string $Editeur = null;
+    private ?string $editeur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $ISBN = null;
+    private ?string $isbn = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $ISSN = null;
+    private ?string $issn = null;
 
     #[ORM\Column(type: Types::JSON)]
-    private array $Categories = [];
+    private array $categories = [];
 
     #[ORM\Column(type: Types::JSON)]
-    private array $Tags = [];
+    private array $tags = [];
 
     #[ORM\Column(type: Types::JSON)]
-    private array $Langues = [];
+    private array $langues = [];
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $Annee = null;
+    private ?\DateTimeImmutable $annee = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    private ?string $Resume = null;
+    private ?string $resume = null;
 
-    #[ORM\OneToMany(mappedBy: 'Ouvrage', targetEntity: Exemplaires::class, cascade: ['persist'], orphanRemoval: false)]
-    private Collection $Exemplaires;
+    #[ORM\OneToMany(mappedBy: 'ouvrage', targetEntity: Exemplaires::class, cascade: ['persist'], orphanRemoval: false)]
+    private Collection $exemplaires;
 
     public function __construct()
     {
-        $this->Exemplaires = new ArrayCollection();
+        $this->exemplaires = new ArrayCollection();
     }
 
     /**
@@ -62,13 +62,13 @@ class Ouvrage
      */
     public function getExemplaires(): Collection
     {
-        return $this->Exemplaires;
+        return $this->exemplaires;
     }
 
     public function addExemplaire(Exemplaires $exemplaire): static
     {
-        if (!$this->Exemplaires->contains($exemplaire)) {
-            $this->Exemplaires->add($exemplaire);
+        if (!$this->exemplaires->contains($exemplaire)) {
+            $this->exemplaires->add($exemplaire);
             $exemplaire->setOuvrage($this);
         }
 
@@ -77,7 +77,7 @@ class Ouvrage
 
     public function removeExemplaire(Exemplaires $exemplaire): static
     {
-        if ($this->Exemplaires->removeElement($exemplaire)) {
+        if ($this->exemplaires->removeElement($exemplaire)) {
             if ($exemplaire->getOuvrage() === $this) {
                 $exemplaire->setOuvrage(null);
             }
@@ -93,184 +93,184 @@ class Ouvrage
 
     public function getTitre(): ?string
     {
-        return $this->Titre;
+        return $this->titre;
     }
 
-    public function setTitre(string $Titre): static
+    public function setTitre(string $titre): static
     {
-        $this->Titre = $Titre;
+        $this->titre = $titre;
 
         return $this;
     }
 
     public function getAuteurs(): array
     {
-        return $this->Auteurs;
+        return $this->auteurs;
     }
 
-    public function setAuteurs(array $Auteurs): static
+    public function setAuteurs(array $auteurs): static
     {
-        $this->Auteurs = $Auteurs;
+        $this->auteurs = $auteurs;
 
         return $this;
     }
 
     public function getEditeur(): ?string
     {
-        return $this->Editeur;
+        return $this->editeur;
     }
 
-    public function setEditeur(string $Editeur): static
+    public function setEditeur(string $editeur): static
     {
-        $this->Editeur = $Editeur;
+        $this->editeur = $editeur;
 
         return $this;
     }
 
     public function getISBN(): ?string
     {
-        return $this->ISBN;
+        return $this->isbn;
     }
 
-    public function setISBN(?string $ISBN): static
+    public function setISBN(?string $isbn): static
     {
-        $this->ISBN = $ISBN;
+        $this->isbn = $isbn;
 
         return $this;
     }
 
     public function getISSN(): ?string
     {
-        return $this->ISSN;
+        return $this->issn;
     }
 
-    public function setISSN(?string $ISSN): static
+    public function setISSN(?string $issn): static
     {
-        $this->ISSN = $ISSN;
+        $this->issn = $issn;
 
         return $this;
     }
 
     public function getCategories(): array
     {
-        return $this->Categories;
+        return $this->categories;
     }
 
-    public function setCategories(array $Categories): static
+    public function setCategories(array $categories): static
     {
-        $this->Categories = $Categories;
+        $this->categories = $categories;
 
         return $this;
     }
 
     public function getTags(): array
     {
-        return $this->Tags;
+        return $this->tags;
     }
 
-    public function setTags(array $Tags): static
+    public function setTags(array $tags): static
     {
-        $this->Tags = $Tags;
+        $this->tags = $tags;
 
         return $this;
     }
 
     public function getLangues(): array
     {
-        return $this->Langues;
+        return $this->langues;
     }
 
-    public function setLangues(array $Langues): static
+    public function setLangues(array $langues): static
     {
-        $this->Langues = $Langues;
+        $this->langues = $langues;
 
         return $this;
     }
 
     public function getAnnee(): ?\DateTimeImmutable
     {
-        return $this->Annee;
+        return $this->annee;
     }
 
-    public function setAnnee(\DateTimeImmutable $Annee): static
+    public function setAnnee(\DateTimeImmutable $annee): static
     {
-        $this->Annee = $Annee;
+        $this->annee = $annee;
 
         return $this;
     }
 
     public function getResume(): ?string
     {
-        return $this->Resume;
+        return $this->resume;
     }
 
-    public function setResume(string $Resume): static
+    public function setResume(string $resume): static
     {
-        $this->Resume = $Resume;
+        $this->resume = $resume;
 
         return $this;
     }
 
     public function getAuteursAsString(): ?string
     {
-        return $this->Auteurs ? implode(', ', $this->Auteurs) : '';
+        return $this->auteurs ? implode(', ', $this->auteurs) : '';
     }
 
     public function setAuteursFromString(?string $auteurs): void
     {
         if ($auteurs) {
-            $this->Auteurs = array_map('trim', explode(',', $auteurs));
+            $this->auteurs = array_map('trim', explode(',', $auteurs));
         } else {
-            $this->Auteurs = [];
+            $this->auteurs = [];
         }
     }
 
     public function getLanguesAsString(): ?string
     {
-        return $this->Langues ? implode(', ', $this->Langues) : '';
+        return $this->langues ? implode(', ', $this->langues) : '';
     }
 
     public function setLanguesFromString(?string $langues): void
     {
         if ($langues) {
-            $this->Langues = array_map('trim', explode(',', $langues));
+            $this->langues = array_map('trim', explode(',', $langues));
         } else {
-            $this->Langues = [];
+            $this->langues = [];
         }
     }
 
     public function getCategoriesAsString(): ?string
     {
-        return $this->Categories ? implode(', ', $this->Categories) : '';
+        return $this->categories ? implode(', ', $this->categories) : '';
     }
 
     public function setCategoriesFromString(?string $categories): void
     {
         if ($categories) {
-            $this->Categories = array_map('trim', explode(',', $categories));
+            $this->categories = array_map('trim', explode(',', $categories));
         } else {
-            $this->Categories = [];
+            $this->categories = [];
         }
     }
 
     public function getTagsAsString(): ?string
     {
-        return $this->Tags ? implode(', ', $this->Tags) : '';
+        return $this->tags ? implode(', ', $this->tags) : '';
     }
 
     public function setTagsFromString(?string $tags): void
     {
         if ($tags) {
-            $this->Tags = array_map('trim', explode(',', $tags));
+            $this->tags = array_map('trim', explode(',', $tags));
         } else {
-            $this->Tags = [];
+            $this->tags = [];
         }
     }
 
     #[Assert\Callback]
     public function validateISBNorISSN(ExecutionContextInterface $context): void
     {
-        if (empty($this->ISBN) && empty($this->ISSN)) {
+        if (empty($this->isbn) && empty($this->issn)) {
             $context->buildViolation('Au moins un des champs ISBN ou ISSN doit être renseigné.')
                 ->atPath('ISBN')
                 ->addViolation();
