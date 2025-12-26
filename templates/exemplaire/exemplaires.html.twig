@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ ouvrage.Titre }}{% endblock %}
+{% block title %}{{ ouvrage.titre }}{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
@@ -8,7 +8,7 @@
 
 {% block body %}
 <div class="exemplaires">
-    <h1>Exemplaires de "{{ ouvrage.Titre }}"</h1>
+    <h1>Exemplaires de "{{ ouvrage.titre }}"</h1>
     {% if exemplaires is not empty %}
         <table>
             <thead>
@@ -21,9 +21,9 @@
             <tbody>
                 {% for exemplaire in exemplaires %}
                     <tr>
-                        <td>{{ exemplaire.Cote }}</td>
-                        <td>{{ exemplaire.Etat }}</td>
-                        <td>{{ exemplaire.Disponibilite ? 'Oui' : 'Non' }}</td>
+                        <td>{{ exemplaire.cote }}</td>
+                        <td>{{ exemplaire.etat.value }}</td>
+                        <td>{{ exemplaire.disponibilite ? 'Oui' : 'Non' }}</td>
                         <td><a href="{{ path('exemplaire_reservation', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-primary">Réserver</a></td>
                         <td><a href="{{ path('exemplaire_edit', {'id': ouvrage.id, 'exemplaireId': exemplaire.id}) }}" class="btn btn-admin">Modifier</a></td>
                     </tr>

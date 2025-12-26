@@ -9,6 +9,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use App\Entity\Ouvrage;
 
+enum EtatExemplaire: string
+{
+    case BON = 'bon';
+    case MOYEN = 'moyen';
+    case MAUVAIS = 'mauvais';
+}
+
 #[ORM\Entity(repositoryClass: ExemplairesRepository::class)]
 class Exemplaires
 {
@@ -21,7 +28,7 @@ class Exemplaires
     private ?string $cote = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $etat = null;
+    private ?EtatExemplaire $etat = null;
 
     #[ORM\Column(length: 255)]
     private ?string $emplacement = null;
@@ -72,12 +79,12 @@ class Exemplaires
         return $this;
     }
 
-    public function getEtat(): ?string
+    public function getEtat(): ?EtatExemplaire
     {
         return $this->etat;
     }
 
-    public function setEtat(string $etat): static
+    public function setEtat(EtatExemplaire $etat): static
     {
         $this->etat = $etat;
 
