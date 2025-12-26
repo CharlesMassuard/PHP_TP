@@ -23,8 +23,8 @@
         <tbody>
             {% for reservation in reservations %}
                 <tr>
-                    <td>{{ reservation.exemplaire.ouvrage.Titre }}</td>
-                    <td>{{ reservation.exemplaire.Cote }}</td>
+                    <td>{{ reservation.exemplaire.ouvrage.titre }}</td>
+                    <td>{{ reservation.exemplaire.cote }}</td>
                     <td>{{ reservation.dateRetour|date('d/m/Y') }}</td>
                     <td>{{ reservation.statut }}</td>
                     <td>

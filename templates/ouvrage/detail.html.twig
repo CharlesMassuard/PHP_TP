@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ ouvrage.Titre }}{% endblock %}
+{% block title %}{{ ouvrage.titre }}{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/ouvrages.css') }}">
@@ -8,23 +8,23 @@
 
 {% block body %}
 <div class="ouvrage-detail">
-    <h1>{{ ouvrage.Titre }}</h1>
-    {% if ouvrage.Auteurs is not empty %}
+    <h1>{{ ouvrage.titre }}</h1>
+    {% if ouvrage.auteurs is not empty %}
         <p>
-            Auteur{% if ouvrage.Auteurs|length > 1 %}s{% endif %} :
-            {{ ouvrage.Auteurs|join(', ') }}
+            Auteur{% if ouvrage.auteurs|length > 1 %}s{% endif %} :
+            {{ ouvrage.auteurs|join(', ') }}
         </p>
     {% else %}
         <p>Auteur inconnu</p>
     {% endif %}
-    <p>Éditeur : {{ ouvrage.Editeur }}</p>
-    <p>Année de parution : {{ ouvrage.Annee ? ouvrage.Annee|date('Y') : '—' }}</p>
-    <p>Langues : {{ ouvrage.Langues|join(', ') }}</p>
-    <p>Catégories : {{ ouvrage.Categories|join(', ') }}</p>
-    <p>Tags : {{ ouvrage.Tags|join(', ') }}</p>
-    <p>ISBN : {{ ouvrage.ISBN }} / ISSN : {{ ouvrage.ISSN }}</p>
+    <p>Éditeur : {{ ouvrage.editeur }}</p>
+    <p>Année de parution : {{ ouvrage.annee ? ouvrage.annee|date('Y') : '—' }}</p>
+    <p>Langues : {{ ouvrage.langues|join(', ') }}</p>
+    <p>Catégories : {{ ouvrage.categories|join(', ') }}</p>
+    <p>Tags : {{ ouvrage.tags|join(', ') }}</p>
+    <p>ISBN : {{ ouvrage.isbn }} / ISSN : {{ ouvrage.issn }}</p>
     <p>Disponible à l'emprunt : {{ isDisponible ? 'Oui' : 'Non' }}</p>
-    <p>{{ ouvrage.Resume }}</p>
+    <p>{{ ouvrage.resume }}</p>
     <nav>
         <button onclick="location.href='{{ path('app_ouvrage_exemplaires', {'id': ouvrage.id}) }}'" class="btn btn-primary">Voir les exemplaires</button>
         <button onclick="location.href='{{ path('app_ouvrages') }}'" class="btn btn-secondary">Retour à la liste des ouvrages</button>

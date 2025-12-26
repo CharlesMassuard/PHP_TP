@@ -38,7 +38,7 @@
     {% for ouvrage in ouvrages %}
         <div class="ouvrage-card" onclick="location.href='{{ path('app_ouvrage_detail', {'id': ouvrage.id}) }}'">
             <div class="card-header">
-                <h2 class="card-title">{{ ouvrage.Titre|e }}</h2>
+                <h2 class="card-title">{{ ouvrage.titre|e }}</h2>
             </div>
             
             <div class="card-body">
@@ -47,8 +47,8 @@
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    {% if (ouvrage.Auteurs is defined and ouvrage.Auteurs is not empty) %}
-                        <span>{{ ouvrage.Auteurs|join(', ') }}</span>
+                    {% if (ouvrage.auteurs is defined and ouvrage.auteurs is not empty) %}
+                        <span>{{ ouvrage.auteurs|join(', ') }}</span>
                     {% else %}
                         <span class="text-muted">Auteur inconnu</span>
                     {% endif %}
@@ -59,7 +59,7 @@
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                     </svg>
-                    <span>{{ ouvrage.Editeur|default('—') }}</span>
+                    <span>{{ ouvrage.editeur|default('—') }}</span>
                 </div>
 
                 <div class="card-info">
@@ -69,11 +69,11 @@
                         <line x1="8" y1="2" x2="8" y2="6"></line>
                         <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    <span>{{ (ouvrage.Annee is defined and ouvrage.Annee) ? ouvrage.Annee|date('Y') : '—' }}</span>
+                    <span>{{ (ouvrage.annee is defined and ouvrage.annee) ? ouvrage.annee|date('Y') : '—' }}</span>
                 </div>
 
-                {% if ouvrage.Resume is defined and ouvrage.Resume %}
-                    <p class="card-resume">{{ ouvrage.Resume }}</p>
+                {% if ouvrage.resume is defined and ouvrage.resume %}
+                    <p class="card-resume">{{ ouvrage.resume }}</p>
                 {% endif %}
             </div>
 
