@@ -6,24 +6,25 @@ use App\Entity\Ouvrage;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use App\Entity\User;
 use App\Entity\Exemplaires;
+use App\Entity\EtatExemplaire;
 
 class EmpruntControllerTest extends WebTestCase
 {
     public function testReserveExemplaire(): void
     {
         $client = static::createClient();
-        [$user, $emprunt] = $this->createBD($client);
+        [$user, $emprunt, $ouvrage, $exemplaire] = $this->createBD($client);
         $client->loginUser($user);
 
-        $client->request('GET', '/ouvrage/1/exemplaires/1/reserve');
+        $client->request('GET', '/ouvrage/' . $ouvrage->getId() . '/exemplaires/' . $exemplaire->getId() . '/reserve');
 
-        $this->assertResponseRedirects('/ouvrage/1/exemplaires');
+        $this->assertResponseRedirects('/ouvrage/' . $ouvrage->getId() . '/exemplaires');
         $client->followRedirect();
 
         $entityManager = $client->getContainer()->get('doctrine')->getManager();
         $emprunt = $entityManager->getRepository(\App\Entity\Emprunt::class)->findOneBy([
             'user' => $user,
-            'exemplaire' => 1,
+            'exemplaire' => $exemplaire,
             'statut' => 'Réservé',
         ]);
         $this->assertNotNull($emprunt, 'L\'emprunt n\'a pas été créé dans la base de données.');
@@ -63,7 +64,7 @@ class EmpruntControllerTest extends WebTestCase
         $this->assertEquals('Retourné', $emprunt->getStatut(), 'Le statut de l\'emprunt n\'a pas été mis à jour dans la base de données.');
     }
 
-    private function createBD($client, $statut="Réservé"): array
+    private function createBD($client, $statut = "Réservé"): array
     {
         $entityManager = $client->getContainer()->get('doctrine')->getManager();
 
@@ -73,7 +74,6 @@ class EmpruntControllerTest extends WebTestCase
         $user->setPassword(
             $client->getContainer()->get('security.password_hasher')->hashPassword($user, 'password')
         );
-
         $entityManager->persist($user);
         $entityManager->flush();
 
@@ -94,7 +94,7 @@ class EmpruntControllerTest extends WebTestCase
         $exemplaire->setOuvrage($ouvrage);
         $exemplaire->setCote("COTE-TEST-001");
         $exemplaire->setDisponibilite(true);
-        $exemplaire->setEtat("Neuf");
+        $exemplaire->setEtat(EtatExemplaire::BON);
         $exemplaire->setEmplacement("Rayon Test");
         $entityManager->persist($exemplaire);
         $entityManager->flush();
@@ -104,9 +104,10 @@ class EmpruntControllerTest extends WebTestCase
         $emprunt->setExemplaire($exemplaire);
         $emprunt->setStatut($statut);
         $emprunt->setDateRetour(new \DateTimeImmutable('+14 days'));
+        $emprunt->setDateEmprunt(new \DateTimeImmutable());
         $entityManager->persist($emprunt);
         $entityManager->flush();
 
-        return [$user, $emprunt];
+        return [$user, $emprunt, $ouvrage, $exemplaire];
     }
 }

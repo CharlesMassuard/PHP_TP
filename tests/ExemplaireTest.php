@@ -3,6 +3,7 @@
 namespace App\Tests\Entity;
 
 use App\Entity\Exemplaires;
+use App\Entity\EtatExemplaire;
 use App\Entity\Ouvrage;
 use App\Entity\Emprunt;
 use PHPUnit\Framework\TestCase;
@@ -32,7 +33,7 @@ class ExemplaireTest extends TestCase
 
     public function testSetAndGetEtat(): void
     {
-        $etat = 'bon';
+        $etat = EtatExemplaire::MAUVAIS;
         $result = $this->exemplaire->setEtat($etat);
         
         $this->assertSame($this->exemplaire, $result);
@@ -120,16 +121,17 @@ class ExemplaireTest extends TestCase
     public function testExemplaireComplet(): void
     {
         $ouvrage = $this->createMock(Ouvrage::class);
+        $etat = EtatExemplaire::BON;
         
         $this->exemplaire
             ->setCote('B-789')
-            ->setEtat('excellent')
+            ->setEtat($etat)
             ->setEmplacement('Salle de lecture')
             ->setDisponibilite(true)
             ->setOuvrage($ouvrage);
 
         $this->assertSame('B-789', $this->exemplaire->getCote());
-        $this->assertSame('excellent', $this->exemplaire->getEtat());
+        $this->assertSame(EtatExemplaire::BON, $this->exemplaire->getEtat());
         $this->assertSame('Salle de lecture', $this->exemplaire->getEmplacement());
         $this->assertTrue($this->exemplaire->getDisponibilite());
         $this->assertSame($ouvrage, $this->exemplaire->getOuvrage());
