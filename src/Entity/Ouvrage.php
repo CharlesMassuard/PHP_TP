@@ -20,33 +20,73 @@ class Ouvrage
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le titre ne peut pas être vide.')]
+    #[Assert\Length(
+        min: 1,
+        max: 255,
+        minMessage: 'Le titre doit contenir au moins {{ limit }} caractère.',
+        maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères.'
+    )]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::JSON)]
+    #[Assert\NotBlank(message: 'Au moins un auteur doit être renseigné.')]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Au moins un auteur doit être renseigné.'
+    )]
     private array $auteurs = [];
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'L\'éditeur ne peut pas être vide.')]
+    #[Assert\Length(max: 255)]
     private ?string $editeur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Isbn(
+        message: 'Le format ISBN est invalide.'
+    )]
     private ?string $isbn = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Issn(
+        message: 'Le format ISSN est invalide.'
+    )]
     private ?string $issn = null;
 
     #[ORM\Column(type: Types::JSON)]
+    #[Assert\NotBlank(message: 'Au moins une catégorie doit être renseignée.')]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Au moins une catégorie doit être renseignée.'
+    )]
     private array $categories = [];
 
     #[ORM\Column(type: Types::JSON)]
     private array $tags = [];
 
     #[ORM\Column(type: Types::JSON)]
+    #[Assert\NotBlank(message: 'Au moins une langue doit être renseignée.')]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Au moins une langue doit être renseignée.'
+    )]
     private array $langues = [];
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'L\'année de parution est obligatoire.')]
+    #[Assert\LessThanOrEqual(
+        value: 'today',
+        message: 'L\'année ne peut pas être dans le futur.'
+    )]
     private ?\DateTimeImmutable $annee = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank(message: 'Le résumé ne peut pas être vide.')]
+    #[Assert\Length(
+        min: 10,
+        minMessage: 'Le résumé doit contenir au moins {{ limit }} caractères.'
+    )]
     private ?string $resume = null;
 
     #[ORM\OneToMany(mappedBy: 'ouvrage', targetEntity: Exemplaires::class, cascade: ['persist'], orphanRemoval: false)]
