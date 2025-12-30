@@ -20,7 +20,7 @@ class ReglesEmpruntsType extends AbstractType
                 'label' => 'Catégorie',
             ])
             ->add('dureeEmpruntJours')
-            ->add('nombreMaxEmrpunts')
+            ->add('nombreMaxEmprunts')
             ->add('penaliteParJour')
         ;
     }

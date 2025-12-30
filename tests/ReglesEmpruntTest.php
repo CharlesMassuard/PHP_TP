@@ -37,13 +37,13 @@ class ReglesEmpruntTest extends TestCase
         $this->assertSame($duree, $this->regles->getDureeEmpruntJours());
     }
 
-    public function testSetAndGetNombreMaxEmrpunts(): void
+    public function testSetAndGetNombreMaxEmprunts(): void
     {
         $nombre = 5;
-        $result = $this->regles->setNombreMaxEmrpunts($nombre);
+        $result = $this->regles->setNombreMaxEmprunts($nombre);
         
         $this->assertSame($this->regles, $result);
-        $this->assertSame($nombre, $this->regles->getNombreMaxEmrpunts());
+        $this->assertSame($nombre, $this->regles->getNombreMaxEmprunts());
     }
 
     public function testSetAndGetPenaliteParJour(): void
@@ -65,9 +65,9 @@ class ReglesEmpruntTest extends TestCase
         $this->assertNull($this->regles->getDureeEmpruntJours());
     }
 
-    public function testGetNombreMaxEmrpuntsReturnsNullByDefault(): void
+    public function testGetNombreMaxEmpruntsReturnsNullByDefault(): void
     {
-        $this->assertNull($this->regles->getNombreMaxEmrpunts());
+        $this->assertNull($this->regles->getNombreMaxEmprunts());
     }
 
     public function testGetPenaliteParJourReturnsNullByDefault(): void
@@ -80,12 +80,12 @@ class ReglesEmpruntTest extends TestCase
         $this->regles
             ->setCategorie('Professeur')
             ->setDureeEmpruntJours(30)
-            ->setNombreMaxEmrpunts(10)
+            ->setNombreMaxEmprunts(10)
             ->setPenaliteParJour(0.25);
 
         $this->assertSame('Professeur', $this->regles->getCategorie());
         $this->assertSame(30, $this->regles->getDureeEmpruntJours());
-        $this->assertSame(10, $this->regles->getNombreMaxEmrpunts());
+        $this->assertSame(10, $this->regles->getNombreMaxEmprunts());
         $this->assertSame(0.25, $this->regles->getPenaliteParJour());
     }
 
@@ -94,7 +94,7 @@ class ReglesEmpruntTest extends TestCase
         $result = $this->regles
             ->setCategorie('Etudiant')
             ->setDureeEmpruntJours(14)
-            ->setNombreMaxEmrpunts(3)
+            ->setNombreMaxEmprunts(3)
             ->setPenaliteParJour(0.50);
 
         $this->assertInstanceOf(ReglesEmprunts::class, $result);

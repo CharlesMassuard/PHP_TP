@@ -38,7 +38,7 @@ final class EmpruntController extends AbstractController
         $regle = $reglesRepository->findOneBy(['categorie' => $categorieOuvrage]);
         if ($regle) {
             $dureeEmprunt = $regle->getDureeEmpruntJours();
-            $nbrMaxEmpruntsParCategorie = $regle->getNombreMaxEmrpunts();
+            $nbrMaxEmpruntsParCategorie = $regle->getNombreMaxEmprunts();
             /** @var \App\Entity\User $user */
             $user = $this->getUser();
             $nbrEmpruntsCatUser = $user->getEmprunts()->filter(function (Emprunt $emprunt) use ($categorieOuvrage) {
